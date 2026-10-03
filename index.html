@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache">
-<meta name="description" content="Sadu House | بيت السدو - handwoven Bedouin armrests, rugs and wall hangings, shipped Australia-wide.">
+<meta name="description" content="Sadu House | بيت السدو - handwoven Bedouin armrests, floor mats and wool wall art, shipped Australia-wide.">
 <meta property="og:title" content="Sadu House | بيت السدو">
 <meta property="og:image" content="img/hang-red-camel.webp">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -159,6 +159,27 @@ form.f{display:grid;gap:12px}
 .sz{font-size:12px;border:1px solid var(--line);background:var(--sand);color:var(--ink);border-radius:8px;padding:3px 8px;font-variant-numeric:tabular-nums}
 .sz.on{border-color:var(--coffee);background:var(--coffee);color:var(--sand)}
 @media (max-width:520px){.dot{width:20px;height:20px}.swn{flex-basis:100%;font-size:11px}.sz{font-size:11px;padding:3px 6px}}
+.img[role=button],.pt{cursor:pointer}
+.pdimg{position:relative;background:#fff;border-radius:14px;width:100%;height:min(86vw,440px);overflow:hidden}
+#pdBody{display:flex;flex-direction:column}
+#pdBody>*{flex:none}
+.pdimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.thumbs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.th{flex:none;width:58px;height:58px;border-radius:10px;border:2px solid var(--line);background:#fff;padding:2px}
+.th img{width:100%;height:100%;object-fit:contain}
+.th.on{border-color:var(--coffee)}
+.pdt{font-size:22px;color:var(--coffee)}
+.pdp{font-size:20px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.aud{font-size:13px;color:var(--muted);font-weight:400}
+.optl{font-size:13px;color:var(--muted)}
+.optl b{color:var(--ink)}
+.pdl{margin:0;line-height:1.9}
+.specs{margin:0;display:grid;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.specs div{display:grid;grid-template-columns:110px 1fr;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line)}
+.specs div:last-child{border-bottom:0}
+.specs dt{color:var(--muted);font-size:13px}
+.specs dd{margin:0;font-weight:500}
+#pd .sw .swn{display:none}
 </style>
 </head>
 <body>
@@ -233,32 +254,62 @@ form.f{display:grid;gap:12px}
     <div class="sheetbody" id="sheetBody"></div>
   </div>
 </div>
+<div class="sheet" id="pd" hidden role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
+  <div class="sheetbox"><div class="sheethead"><span style="flex:1"></span><button class="x" type="button" onclick="closePD()" aria-label="إغلاق">✕</button></div>
+  <div class="sheetbody" id="pdBody"></div></div>
+</div>
 <div class="toast" id="toast" hidden></div>
 <script>
-const CATS=[['all','الكل','All'],['mirka','مراكي وأطقم','Armrests & sets'],['rug','زوالي','Rugs'],['hang','تعليقات','Wall hangings'],['custom','حسب الطلب','Made to order']];
+const CATS=[['all','الكل','All'],['mirka','مراكي وأطقم','Armrests & sets'],['rug','مدات وزوالي','Floor mats'],['hang','لوحات جدارية','Wall art'],['custom','حسب الطلب','Made to order']];
 const COL={red:['أحمر','Red','#8c1d18'],burgundy:['عنابي','Burgundy','#5c1420'],navy:['كحلي','Navy','#1f2f6b'],royal:['أزرق ملكي','Royal blue','#2b4fb5'],turq:['فيروزي','Turquoise','#1f8a86'],green:['أخضر','Green','#2f6b3a'],olive:['زيتي','Olive','#6b6a2a'],honey:['عسلي','Honey','#b57a26'],grey:['رمادي','Grey','#7d7d80'],purple:['بنفسجي','Purple','#5d3478'],black:['أسود','Black','#1d1b1a'],pink:['وردي','Pink','#d0648f'],orange:['برتقالي','Orange','#d7701c'],gold:['ذهبي','Gold','#c99a2e'],blue:['أزرق','Blue','#2a4f8a'],mix:['ألوان متنوعة','Mixed','conic-gradient(#8c1d18 0 33%,#2a4f8a 0 66%,#c99a2e 0)']};
 const TEX=['red','burgundy','navy','royal','turq','green','olive','honey','grey','purple','black'];
 const SZ_CUSH=[['٤٠×٦٠ سم','40×60 cm',89],['٥٠×٧٠ سم','50×70 cm',109]];
-const SZ_RUG1=[['٨٠×٢٠٠ سم','80×200 cm',289],['١٠٠×٣٠٠ سم','100×300 cm',389],['١٢٠×٤٠٠ سم','120×400 cm',529]];
-const SZ_RUG2=[['١٢٠×١٨٠ سم','120×180 cm',399],['١٦٠×٢٣٠ سم','160×230 cm',549],['٢٠٠×٣٠٠ سم','200×300 cm',799]];
-const SZ_HANG=[['٤٠×٦٠ سم','40×60 cm',149],['٦٠×٩٠ سم','60×90 cm',229],['٩٠×١٣٠ سم','90×130 cm',349]];
-const SZ_TREE=[['٤٠×٦٠ سم','40×60 cm',139],['٦٠×٩٠ سم','60×90 cm',219],['٩٠×١٣٠ سم','90×130 cm',329]];
+const SZ_RUG1=[['٢×٣ م','2×3 m',389],['٢×٤ م','2×4 m',489],['٣×٤ م','3×4 m',649]];
+const SZ_RUG2=[['١×٢ م','1×2 m',399],['١٫٥×٢٫٥ م','1.5×2.5 m',549],['٢×٣ م','2×3 m',799]];
+const SZ_HANG=[['٧٠×١١٠ سم','70×110 cm',229],['٥٠×٧٠ سم','50×70 cm',159],['١٠٠×١٥٠ سم','100×150 cm',349]];
+const SZ_TREE=[['٧٠×١١٠ سم','70×110 cm',219],['٥٠×٧٠ سم','50×70 cm',149],['١٠٠×١٥٠ سم','100×150 cm',329]];
 const P=[
  {id:'mirka-shdad',c:'mirka',ar:'مركى شداد سدو',en:'Sadu shdad armrest',dar:'مركى على شكل شداد الجمل، بأعمدة خشب ومسامير نحاسية.',den:'Camel-saddle armrest with wooden posts and brass studs.',p:349,col:TEX,tag:['الأكثر طلباً','Best seller']},
- {id:'mirka-red',c:'mirka',ar:'مركى سدو بشراشيب',en:'Sadu armrest with tassels',dar:'منسوج يدوي بخطوط سدو وشراشيب ملونة.',den:'Handwoven sadu stripes with colored tassels.',p:229,col:TEX},
- {id:'cushion-kilim',c:'mirka',ar:'مخدة كليم منسوجة',en:'Woven kilim cushion',dar:'مخدة مستطيلة بنقشة نجمة البادية.',den:'Rectangular cushion with a Bedouin star motif.',col:TEX,sz:SZ_CUSH},
+ {id:'mirka-red',c:'mirka',ar:'مركى صوف بنقشة الجوهرة',en:'Jewel-pattern wool armrest',dar:'صوف طبيعي منسوج يدوياً بالكامل، بشراشيب.',den:'Fully handwoven natural wool, with tassels.',p:229,col:TEX},
+ {id:'cushion-kilim',c:'mirka',ar:'مخدة صوف بنقشة الصقر',en:'Falcon-pattern wool cushion',dar:'صوف طبيعي بنقشة الصقر التراثية.',den:'Natural wool with the heritage falcon pattern.',col:TEX,sz:SZ_CUSH},
  {id:'set-cushions',c:'mirka',ar:'طقم ٤ مخدات كليم',en:'Set of 4 kilim cushions',dar:'أربع مخدات ٤٠×٦٠ بنفس اللون.',den:'Four 40×60 cushions in one color.',p:319,o:356,col:TEX,tag:['طقم','Set']},
  {id:'set-majlis',c:'mirka',ar:'طقم مراكي: ٢ مركى + ٢ مخدة',en:'Majlis set: 2 armrests + 2 cushions',dar:'طقم متناسق بنفس اللون، أوفر من شرائها بالحبة.',den:'A matching set in one color, cheaper than buying separately.',p:579,o:636,col:TEX,tag:['طقم','Set']},
  {id:'set-shdad',c:'mirka',ar:'طقم شداد: ٢ شداد + مخدة',en:'Shdad set: 2 saddle armrests + cushion',dar:'زوج شداد مع مخدة كليم بنفس اللون.',den:'A pair of saddle armrests with a matching kilim cushion.',p:729,o:787,col:TEX,tag:['طقم','Set']},
  {id:'set-full',c:'mirka',ar:'جلسة كاملة: ٢ شداد + مركى + ٢ مخدة + زولية',en:'Full majlis: 2 shdad + armrest + 2 cushions + rug',dar:'كل اللي تحتاجه لجلسة بدوية متكاملة بلون واحد.',den:'Everything for a complete Bedouin majlis in one color.',p:1349,o:1504,col:TEX,tag:['وفّر A$155','Save A$155']},
- {id:'rug-sadu',c:'rug',ar:'زولية سدو ممر',en:'Sadu runner rug',dar:'زولية طويلة بنقشة السدو وأطراف شراشيب.',den:'Long sadu-pattern runner with fringe.',col:TEX,sz:SZ_RUG1,tag:['جديد','New']},
- {id:'rug-shag',c:'rug',ar:'زولية صوف منفوشة',en:'Shaggy wool rug',dar:'صوف كثيف منسوج يدوياً.',den:'Dense hand-knotted wool.',col:['red','burgundy','navy','royal','turq','green','honey','grey','purple','pink'],sz:SZ_RUG2},
- {id:'hang-red-camel',c:'hang',ar:'تعليقة الجمل وقت الغروب',en:'Camel at sunset hanging',dar:'تعليقة جدارية منسوجة يدوياً، بيت شعر وجمل ونخلة.',den:'Handwoven wall hanging: tent, camel and palm.',col:['red','burgundy','navy','turq','green','purple','pink','orange'],sz:SZ_HANG},
- {id:'hang-blue-camel',c:'hang',ar:'تعليقة الجمال والنخلة',en:'Camels & palm hanging',dar:'سماء زرقاء وقمر ونخلة، شغل يدوي.',den:'Blue sky, moon and palm, handwoven.',col:['blue'],sz:SZ_HANG},
- {id:'hang-tree',c:'hang',ar:'تعليقة الشجرة والطيور',en:'Tree & birds hanging',dar:'شجرة وطيور، منسوجة يدوياً.',den:'Tree and birds, handwoven.',col:['gold','honey','navy','turq','green','olive','purple','pink'],sz:SZ_TREE},
- {id:'set-hangings',c:'hang',ar:'طقم ٣ تعليقات',en:'Set of 3 wall hangings',dar:'الجمل والغروب، الجمال والنخلة، والشجرة، مقاس ٤٠×٦٠.',den:'Sunset camel, camels & palm and tree, 40×60 each.',p:389,o:437,col:['mix'],tag:['طقم','Set']},
+ {id:'rug-sadu',c:'rug',ar:'مدة حجازي وجهين',en:'Double-sided Hijazi floor mat',dar:'قماش سوري فاخر، نقشة حجازية على الوجهين.',den:'Premium Syrian fabric, Hijazi pattern on both sides.',col:TEX,sz:SZ_RUG1,tag:['جديد','New']},
+ {id:'rug-shag',c:'rug',ar:'مدة مصرية مرسومة',en:'Egyptian patterned floor mat',dar:'خامة مصرية عالية الجودة بنقش عراقي.',den:'High-quality Egyptian weave with an Iraqi pattern.',col:['red','burgundy','navy','royal','turq','green','honey','grey','purple','pink'],sz:SZ_RUG2},
+ {id:'hang-red-camel',c:'hang',ar:'لوحة صوف: الجمل والغروب',en:'Wool wall art: camel at sunset',dar:'لوحة منسوجة يدوياً على الصوف، نقشة رقم ٣.',den:'Hand-woven wool wall art, pattern no. 3.',col:['red','burgundy','navy','turq','green','purple','pink','orange'],sz:SZ_HANG},
+ {id:'hang-blue-camel',c:'hang',ar:'لوحة صوف: الجمال والنخلة',en:'Wool wall art: camels & palm',dar:'لوحة منسوجة يدوياً على الصوف، سماء زرقاء وقمر.',den:'Hand-woven wool wall art, blue sky and moon.',col:['blue'],sz:SZ_HANG},
+ {id:'hang-tree',c:'hang',ar:'لوحة صوف: الشجرة والطيور',en:'Wool wall art: tree & birds',dar:'لوحة منسوجة يدوياً على الصوف، نقشة رقم ٥.',den:'Hand-woven wool wall art, pattern no. 5.',col:['gold','honey','navy','turq','green','olive','purple','pink'],sz:SZ_TREE},
+ {id:'set-hangings',c:'hang',ar:'طقم ٣ لوحات صوف',en:'Set of 3 wool wall arts',dar:'الجمل والغروب، الجمال والنخلة، والشجرة، مقاس ٥٠×٧٠.',den:'Sunset camel, camels & palm and tree, 50×70 each.',p:429,o:467,col:['mix'],tag:['طقم','Set']},
  {id:'custom',c:'custom',img:'mirka-shdad--turq',ar:'تصميم حسب طلبك',en:'Made to order',dar:'تبي لون أو مقاس أو نقشة ما شفتها هنا؟ المصنع يسويها لك. أرسل لنا فكرتك ونعطيك السعر.',den:'Want a color, size or pattern you don’t see here? Our weavers make it for you. Send us your idea for a quote.',custom:1}
 ];
+
+const W=(ar,en)=>({ar,en});
+const USE_M=W('المجلس، الخيمة، رحلات البر','Majlis, tents, desert trips');
+const D={
+ 'mirka-shdad':{l:W('مركى على شكل شداد الجمل، منسوج بنقشات السدو التراثية، بأعمدة خشب طبيعي ومسامير نحاسية وجوانب جلد شمواه. قطعة أساسية في أي مجلس عربي، تجمع بين الراحة والأصالة.','A camel-saddle armrest woven in heritage sadu patterns, with natural wood posts, brass studs and suede sides. A centrepiece for any Arabic majlis, comfortable and authentic.'),
+  s:[[W('الصناعة','Craft'),W('يدوية','Handmade')],[W('الخامة','Material'),W('صوف منسوج، خشب طبيعي، جلد شمواه','Woven wool, natural wood, suede')],[W('النقشة','Pattern'),W('السدو التراثية','Heritage sadu')],[W('الاستخدام','Use'),USE_M]]},
+ 'mirka-red':{l:W('مراكي صوف يدوي بنقشة الجوهرة التراثية، مصنوعة يدوياً من صوف طبيعي بحرفية عالية. تصميم أنيق ودافئ يضفي لمسة أصالة على مجلسك أو خيمتك، مع جودة ومتانة تدوم طويلاً.','Handwoven wool armrest in the heritage jewel pattern, crafted from natural wool. Elegant and warm, it brings an authentic touch to your majlis or tent, built to last.'),
+  s:[[W('الصناعة','Craft'),W('يدوية بالكامل','Fully handmade')],[W('الخامة','Material'),W('صوف طبيعي','Natural wool')],[W('النقشة','Pattern'),W('الجوهرة التراثية','Heritage jewel')],[W('الاستخدام','Use'),USE_M]]},
+ 'cushion-kilim':{l:W('مخدة صوف بنقشة الصقر التراثية، مصنوعة من صوف طبيعي عالي الجودة يجمع بين الدفء والراحة. تصميم أنيق مستوحى من التراث يضفي لمسة مميزة على مجلسك أو خيمتك أو رحلات البر.','A wool cushion in the heritage falcon pattern, made from high-quality natural wool for warmth and comfort. An elegant heritage-inspired design for your majlis, tent or desert trips.'),
+  s:[[W('الخامة','Material'),W('صوف طبيعي','Natural wool')],[W('النقشة','Pattern'),W('الصقر التراثية','Heritage falcon')],[W('الاستخدام','Use'),USE_M]]},
+ 'rug-sadu':{l:W('مدة حجازي وجهين من قماش سوري فاخر، بنقشة حجازية أصيلة وأنيقة ومساحة واسعة تناسب المجالس والتجمعات العائلية والرحلات. تأتي بوجهين قابلين للاستخدام لتمنحك تصميمين في قطعة واحدة.','A double-sided Hijazi floor mat in premium Syrian fabric, with an authentic Hijazi pattern and generous size for majlis, family gatherings and trips. Both sides can be used, giving you two looks in one piece.'),
+  s:[[W('الخامة','Material'),W('قماش سوري فاخر على الوجهين','Premium Syrian fabric, both sides')],[W('المقاس الأساسي','Standard size'),W('٢ × ٣ متر','2 × 3 m')],[W('النقشة','Pattern'),W('حجازية، وجهين قابلين للاستخدام','Hijazi, reversible')],[W('الاستخدام','Use'),W('المجالس، الرحلات، المخيمات، الاستراحات','Majlis, trips, camps, rest houses')],[W('العناية','Care'),W('سهلة الفرش والطي والتنظيف','Easy to lay out, fold and clean')]]},
+ 'rug-shag':{l:W('مدة مصرية بتصميم عراقي مرسوم أنيق. خامة مصرية عالية الجودة بألوان زاهية ونقوش راقية تضفي لمسة تراثية وفخامة على مجلسك أو جلستك الخارجية. مريحة، متينة، وسهلة الفرش والتنظيف.','An Egyptian floor mat with an elegant Iraqi pattern. High-quality Egyptian weave in vivid colors and refined motifs that add heritage and luxury to your majlis or outdoor seating. Comfortable, durable and easy to clean.'),
+  s:[[W('الخامة','Material'),W('مصرية عالية الجودة','High-quality Egyptian weave')],[W('المقاس الأساسي','Standard size'),W('١ × ٢ متر','1 × 2 m')],[W('التصميم','Design'),W('عراقي مرسوم (شكل ١)','Iraqi pattern (design 1)')],[W('الاستخدام','Use'),W('المجلس، الجلسات، الاستراحات','Majlis, seating areas, rest houses')]]},
+ 'hang-red-camel':{l:W('لوحة مرسومة على الصوف اليدوي، ديكور تراثي مميز يناسب المجالس العربية والخيام وبيوت الشعر والاستراحات. تمنح المكان طابعاً أصيلاً وتضيف تفصيلاً بصرياً مميزاً يمكن تنسيقه مع المدات والمراكي وبقية التراثيات.','Hand-woven wool wall art, a distinctive heritage piece for Arabic majlis, tents and rest houses. It gives the space an authentic feel and pairs well with floor mats, armrests and other heritage pieces.'),
+  s:[[W('الخامة','Material'),W('صوف','Wool')],[W('التنفيذ','Made'),W('يدوي','By hand')],[W('المقاس الأساسي','Standard size'),W('٧٠ × ١١٠ سم','70 × 110 cm')],[W('النقشة','Pattern'),W('رقم ٣','No. 3')],[W('الاستخدام','Use'),W('ديكور جداري تراثي','Heritage wall decor')]]},
+ 'hang-blue-camel':{l:W('لوحة مرسومة على الصوف اليدوي، جمال ونخلة تحت قمر الصحراء. قطعة تراثية تضيف لمسة فنية أصيلة للمجلس أو الخيمة وتكمل تنسيق الديكور الشعبي.','Hand-woven wool wall art: camels and a palm under the desert moon. A heritage piece that adds an authentic artistic touch to your majlis or tent.'),
+  s:[[W('الخامة','Material'),W('صوف','Wool')],[W('التنفيذ','Made'),W('يدوي','By hand')],[W('المقاس الأساسي','Standard size'),W('٧٠ × ١١٠ سم','70 × 110 cm')],[W('الاستخدام','Use'),W('ديكور جداري تراثي','Heritage wall decor')]]},
+ 'hang-tree':{l:W('لوحة مرسومة على الصوف اليدوي، قطعة تراثية مميزة تضيف للمجلس أو الخيمة لمسة فنية أصيلة وتكمل تنسيق الديكور الشعبي. مناسبة للتعليق كلوحة ديكور ولتنسيقها مع المدات والمراكي والقطع التراثية الأخرى لإظهار المكان بصورة متكاملة.','Hand-woven wool wall art, a distinctive heritage piece that adds an authentic artistic touch to your majlis or tent. Hang it as decor and pair it with floor mats, armrests and other heritage pieces for a complete look.'),
+  s:[[W('الخامة','Material'),W('صوف','Wool')],[W('التنفيذ','Made'),W('يدوي','By hand')],[W('المقاس الأساسي','Standard size'),W('٧٠ × ١١٠ سم','70 × 110 cm')],[W('النقشة','Pattern'),W('رقم ٥','No. 5')],[W('الاستخدام','Use'),W('المجالس، الخيام، بيوت الشعر، الاستراحات','Majlis, tents, rest houses')]]},
+ 'set-cushions':{l:W('أربع مخدات صوف بنقشة الصقر بنفس اللون، تكمل جلستك بتنسيق متكامل وبسعر أوفر.','Four falcon-pattern wool cushions in one color, completing your seating at a better price.'),s:[[W('المحتوى','Includes'),W('٤ مخدات ٤٠×٦٠ سم','4 cushions, 40×60 cm')],[W('الخامة','Material'),W('صوف طبيعي','Natural wool')]]},
+ 'set-majlis':{l:W('طقم متناسق من مركيين صوف بنقشة الجوهرة ومخدتين بنقشة الصقر بنفس اللون. أوفر من شرائها بالحبة.','A matching set of two jewel-pattern armrests and two falcon-pattern cushions in one color. Cheaper than buying separately.'),s:[[W('المحتوى','Includes'),W('٢ مركى + ٢ مخدة','2 armrests + 2 cushions')],[W('الخامة','Material'),W('صوف طبيعي منسوج يدوياً','Handwoven natural wool')]]},
+ 'set-shdad':{l:W('زوج مراكي شداد بنقشة السدو مع مخدة صوف بنفس اللون، للمجلس اللي يبي الفخامة.','A pair of sadu shdad armrests with a matching wool cushion, for a statement majlis.'),s:[[W('المحتوى','Includes'),W('٢ شداد + مخدة','2 shdad armrests + 1 cushion')],[W('الخامة','Material'),W('صوف، خشب طبيعي، جلد شمواه','Wool, natural wood, suede')]]},
+ 'set-full':{l:W('جلسة بدوية كاملة بلون واحد: مركيين شداد، مركى صوف، مخدتين، ومدة مصرية ١×٢ م. كل اللي تحتاجه لمجلس متكامل بتوفير A$155.','A complete Bedouin majlis in one color: two shdad armrests, a wool armrest, two cushions and a 1×2 m Egyptian floor mat. Everything you need, saving A$155.'),s:[[W('المحتوى','Includes'),W('٢ شداد + مركى + ٢ مخدة + مدة ١×٢ م','2 shdad + armrest + 2 cushions + 1×2 m mat')],[W('التوفير','You save'),W('A$155','A$155')]]},
+ 'set-hangings':{l:W('ثلاث لوحات صوف منسوجة يدوياً: الجمل والغروب، الجمال والنخلة، والشجرة والطيور. تتعلق مع بعض كجدار تراثي متكامل.','Three hand-woven wool wall arts: camel at sunset, camels & palm, and tree & birds. Hang them together for a complete heritage wall.'),s:[[W('المحتوى','Includes'),W('٣ لوحات ٥٠×٧٠ سم','3 pieces, 50×70 cm')],[W('الخامة','Material'),W('صوف، تنفيذ يدوي','Wool, hand-woven')]]}
+};
 const sel={};P.forEach(x=>{x.col=x.col||['mix'];sel[x.id]={c:0,s:0}});
 const imgOf=(x,ci)=>x.img?`img/${x.img}.webp`:`img/${x.id}${ci?'--'+x.col[ci]:''}.webp`;
 const priceOf=(x,si)=>x.sz?x.sz[si][2]:x.p;
@@ -290,16 +341,30 @@ function renderCats(){$('cats').innerHTML=CATS.map(([k,a,e])=>`<button class="ca
 function card(x){const v=sel[x.id];
  if(x.custom){const m=encodeURIComponent(L('مرحبا، أبي تصميم حسب الطلب:\nالمنتج: \nاللون: \nالمقاس: \nالكمية: ','Hi, I would like a made-to-order piece:\nItem: \nColor: \nSize: \nQuantity: '));
   return `<article class="prod" id="p-${x.id}"><div class="img"><span class="tag">${L('حسب الطلب','Custom')}</span><img src="${imgOf(x,0)}" alt="" loading="lazy"></div><div class="pbody"><h3>${L(x.ar,x.en)}</h3><p style="display:block">${L(x.dar,x.den)}</p><div class="prow"><span class="price">${L('السعر حسب الطلب','Price on request')}</span><a class="add" style="text-decoration:none;text-align:center" href="https://wa.me/${SHOP.wa}?text=${m}" target="_blank" rel="noopener">${L('اطلب على واتساب','Ask on WhatsApp')}</a></div></div></article>`}const pr=priceOf(x,v.s),o=oldOf(x,v.s);
- return `<article class="prod" id="p-${x.id}"><div class="img">${x.tag?`<span class="tag">${L(x.tag[0],x.tag[1])}</span>`:''}<img src="${imgOf(x,v.c)}" alt="${L(x.ar,x.en)}" loading="lazy"></div>
- <div class="pbody"><h3>${L(x.ar,x.en)}</h3><p>${L(x.dar,x.den)}</p>
+ return `<article class="prod" id="p-${x.id}"><div class="img" role="button" tabindex="0" onclick="openPD('${x.id}')">${x.tag?`<span class="tag">${L(x.tag[0],x.tag[1])}</span>`:''}<img src="${imgOf(x,v.c)}" alt="${L(x.ar,x.en)}" loading="lazy"></div>
+ <div class="pbody"><h3 class="pt" onclick="openPD('${x.id}')">${L(x.ar,x.en)}</h3><p>${L(x.dar,x.den)}</p>
  ${x.col.length>1?`<div class="sw" role="group" aria-label="${L('اللون','Color')}">${x.col.map((k,i)=>`<button type="button" class="dot${i===v.c?' on':''}" style="--c:${COL[k][2]}" title="${L(COL[k][0],COL[k][1])}" aria-label="${L(COL[k][0],COL[k][1])}" aria-pressed="${i===v.c}" onclick="setOpt('${x.id}','c',${i})"></button>`).join('')}<span class="swn">${L(COL[x.col[v.c]][0],COL[x.col[v.c]][1])}</span></div>`:''}
  ${x.sz?`<div class="szs">${x.sz.map((z,i)=>`<button type="button" class="sz${i===v.s?' on':''}" aria-pressed="${i===v.s}" onclick="setOpt('${x.id}','s',${i})">${L(z[0],z[1])}</button>`).join('')}</div>`:''}
  <div class="prow"><span class="price">${sar(pr)}${o?`<s>${sar(o)}</s>`:''}</span>
  <button class="add" type="button" onclick="add('${x.id}',this)">${L('أضف للسلة','Add to cart')}</button></div></div></article>`}
 function render(){$('grid').innerHTML=P.filter(x=>cat==='all'||x.c===cat).map(card).join('')}
-function setOpt(id,k,i){sel[id][k]=i;const x=byId(id);const el=$('p-'+id);if(el)el.outerHTML=card(x)}
+function setOpt(id,k,i){sel[id][k]=i;const x=byId(id);const el=$('p-'+id);if(el)el.outerHTML=card(x);if(pdId===id)drawPD()}
+let pdId=null;
+function openPD(id){pdId=id;$('pd').hidden=false;document.body.style.overflow='hidden';drawPD();$('pdBody').scrollTop=0}
+function closePD(){pdId=null;$('pd').hidden=true;document.body.style.overflow=''}
+function drawPD(){const x=byId(pdId),v=sel[x.id],d=D[x.id]||{l:W(x.dar,x.den),s:[]};const pr=priceOf(x,v.s),o=oldOf(x,v.s);
+ $('pdBody').innerHTML=`<div class="pdimg">${x.tag?`<span class="tag">${L(x.tag[0],x.tag[1])}</span>`:''}<img src="${imgOf(x,v.c)}" alt="${L(x.ar,x.en)}"></div>
+ ${x.col.length>1?`<div class="thumbs">${x.col.map((k,i)=>`<button type="button" class="th${i===v.c?' on':''}" aria-label="${L(COL[k][0],COL[k][1])}" onclick="setOpt('${x.id}','c',${i})"><img src="${imgOf(x,i)}" alt="" loading="lazy"></button>`).join('')}</div>`:''}
+ <h2 class="pdt">${L(x.ar,x.en)}</h2>
+ <div class="price pdp">${sar(pr)}${o?`<s>${sar(o)}</s>`:''}${lang==='ar'?`<span class="aud">A$${pr}</span>`:''}</div>
+ ${x.col.length>1?`<div class="optl">${L('اللون','Color')}: <b>${L(COL[x.col[v.c]][0],COL[x.col[v.c]][1])}</b></div><div class="sw">${x.col.map((k,i)=>`<button type="button" class="dot${i===v.c?' on':''}" style="--c:${COL[k][2]}" aria-label="${L(COL[k][0],COL[k][1])}" onclick="setOpt('${x.id}','c',${i})"></button>`).join('')}</div>`:''}
+ ${x.sz?`<div class="optl">${L('المقاس','Size')}</div><div class="szs">${x.sz.map((z,i)=>`<button type="button" class="sz${i===v.s?' on':''}" onclick="setOpt('${x.id}','s',${i})">${L(z[0],z[1])} · A$${z[2]}</button>`).join('')}</div>`:''}
+ <button class="go" type="button" onclick="add('${x.id}',this)">${L('أضف للسلة','Add to cart')}</button>
+ <p class="pdl">${L(d.l.ar,d.l.en)}</p>
+ ${d.s.length?`<dl class="specs">${d.s.map(([k,val])=>`<div><dt>${L(k.ar,k.en)}</dt><dd>${L(val.ar,val.en)}</dd></div>`).join('')}</dl>`:''}
+ <p class="note" style="margin:0">${L('الألوان والمقاسات الأخرى تُصنع حسب الطلب، وقد يختلف اللون قليلاً عن الصورة.','Other colors and sizes are made to order; colors may vary slightly from the photo.')}</p>`}
 function pick(k){cat=k;renderCats();render()}
-function add(id,b){const v=sel[id];const key=`${id}|${v.c}|${v.s}`;cart[key]=(cart[key]||0)+1;save();b.classList.add('done');b.textContent=L('تمت الإضافة ✓','Added ✓');toast(L('أضيف للسلة','Added to cart'));setTimeout(()=>{b.classList.remove('done');b.textContent=L('أضف للسلة','Add to cart')},1400)}
+function add(id,b){const v=sel[id];const key=`${id}|${v.c}|${v.s}`;cart[key]=(cart[key]||0)+1;save();b.classList.add('done');b.textContent=L('تمت الإضافة ✓','Added ✓');toast(L('أضيف للسلة','Added to cart'));setTimeout(()=>{if(b.isConnected){b.classList.remove('done');b.textContent=L('أضف للسلة','Add to cart')}},1400)}
 function qty(k,d){cart[k]=Math.max(0,(cart[k]||0)+d);if(!cart[k])delete cart[k];save();draw()}
 
 /* ---------- checkout sheet ---------- */
@@ -395,14 +460,15 @@ $('cartBtn').onclick=()=>openSheet('cart');
 $('closeBtn').onclick=closeSheet;
 $('backBtn').onclick=()=>openSheet(step==='pay'?'details':'cart');
 $('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('sheet').hidden)closeSheet()});
+$('pd').addEventListener('click',e=>{if(e.target.id==='pd')closePD()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('pd').hidden)closePD();else if(!$('sheet').hidden)closeSheet()}});
 
 $('lang').onclick=()=>{
  lang=lang==='ar'?'en':'ar';
  document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
  document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=(lang==='ar'?AR:T)[e.dataset.i18n]);
  $('lang').textContent=lang==='ar'?'English':'العربية';
- updateCount();renderCats();render();if(!$('sheet').hidden)draw();
+ updateCount();renderCats();render();if(!$('sheet').hidden)draw();if(pdId)drawPD();
 };
 document.documentElement.lang='ar';document.documentElement.dir='rtl';
 updateCount();renderCats();render();
