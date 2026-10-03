@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache">
+<title>Sadu House | بيت السدو</title>
 <meta name="description" content="Sadu House | بيت السدو - handwoven Bedouin armrests, floor mats and wool wall art, shipped Australia-wide.">
 <meta property="og:title" content="Sadu House | بيت السدو">
 <meta property="og:image" content="img/hang-red-camel.webp">
@@ -219,6 +220,20 @@ form.f{display:grid;gap:12px}
 .empty .big{font-size:42px}
 .acc{white-space:nowrap}
 @media (max-width:420px){.acc #accName{display:none}.bar{gap:8px}.pill{padding:6px 10px}}
+.tools{display:flex;gap:8px;margin-bottom:14px}
+.tools input{flex:1;min-width:0;font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.tools select{font:inherit;padding:9px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);max-width:45%}
+.bnav{display:none}
+@media (max-width:760px){
+ .bnav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--card);border-top:1px solid var(--line);padding:6px 0 calc(6px + env(safe-area-inset-bottom,0px))}
+ .bnav button{background:none;border:0;color:var(--ink);display:grid;justify-items:center;gap:1px;font-size:18px}
+ .bnav small{font-size:11px;color:var(--muted)}
+ .bnav span{position:relative}
+ .bnav i{position:absolute;top:-4px;inset-inline-end:-12px;background:var(--saffron);color:#fff;font-style:normal;font-size:10px;border-radius:999px;min-width:16px;padding-inline:4px;line-height:16px}
+ .wa{bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+ footer{padding-bottom:70px}
+ .sheet,#pd{z-index:50}
+}
 </style>
 </head>
 <body>
@@ -259,6 +274,7 @@ form.f{display:grid;gap:12px}
       <div><span class="eyebrow" data-i18n="catsEye">أقسامنا</span><h2 data-i18n="catsT">المنتجات</h2></div>
       <div class="cats" id="cats"></div>
     </div>
+    <div class="tools"><input id="q" type="search" placeholder="ابحث عن منتج…" aria-label="بحث" oninput="render()"><select id="sort" aria-label="ترتيب" onchange="render()"><option value="">الأحدث</option><option value="lo">السعر: من الأقل</option><option value="hi">السعر: من الأعلى</option></select></div>
     <div class="grid" id="grid"></div>
     <p class="note" data-i18n="sample">شحن مجاني للطلبات فوق A$150. ادفع بسهولة عبر PayID.</p>
   </section>
@@ -281,6 +297,12 @@ form.f{display:grid;gap:12px}
   </div>
   <div class="copy" data-i18n="rights">جميع الحقوق محفوظة © 2026 بيت السدو</div>
 </footer>
+<nav class="bnav" aria-label="التنقل">
+  <button type="button" onclick="closeSheet();closePD();scrollTo({top:0,behavior:'smooth'})"><span>🏠</span><small data-i18n="nHome">الرئيسية</small></button>
+  <button type="button" onclick="closeSheet();closePD();document.getElementById('shop').scrollIntoView({behavior:'smooth'})"><span>🧺</span><small data-i18n="nShop">المتجر</small></button>
+  <button type="button" onclick="closePD();openSheet('cart')"><span>🛒<i id="count2">0</i></span><small data-i18n="cart">السلة</small></button>
+  <button type="button" onclick="closePD();openSheet('account')"><span>👤</span><small data-i18n="nAcc">حسابي</small></button>
+</nav>
 <a class="wa" href="https://wa.me/61470536016" target="_blank" rel="noopener" data-i18n="waBtn">تواصل واتساب</a>
 
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
@@ -370,10 +392,10 @@ const byId=id=>P.find(x=>x.id===id);
 function items(){return Object.entries(cart).map(([k,q])=>{const [id,ci,si]=k.split('|');const x=byId(id);if(!x||q<=0||ci===undefined)return null;const c=+ci,z=+si;if(!x.col[c]||(x.sz&&!x.sz[z]))return null;return{k,x,q,c,z,price:priceOf(x,z)}}).filter(Boolean)}
 function optLabel(i,lng){const c=COL[i.x.col[i.c]];const parts=[];if(i.x.col.length>1)parts.push(lng==='ar'?c[0]:c[1]);if(i.x.sz)parts.push(lng==='ar'?i.x.sz[i.z][0]:i.x.sz[i.z][1]);return parts.join(' · ')}
 function save(){store.set('sh_cart2',cart);updateCount()}
-function updateCount(){$('count').textContent=num(items().reduce((s,i)=>s+i.q,0))}
+function updateCount(){const n=num(items().reduce((s,i)=>s+i.q,0));$('count').textContent=n;const c2=$('count2');if(c2){c2.textContent=n;c2.hidden=n==='0'||n==='٠'}}
 function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,1800)}
 
-const T={notice:'Shipping Australia-wide · Authentic handwoven pieces',brand:'Sadu House',tagline:'Heritage armrests, rugs & hangings',cart:'Cart',heroEye:'Handwoven pieces',heroT:'Bring the desert into your majlis',heroP:'Armrests, rugs and wall hangings woven with sadu and desert motifs, delivered to your door.',shopNow:'Shop now',seeTents:'See armrests',catsEye:'Categories',catsT:'Products',sample:'Free shipping on orders over A$150. Pay easily with PayID.',whyEye:'Why us',whyT:'Why choose us',w1:'Pay with PayID',w1p:'Instant bank transfer from any Australian bank, no card needed.',w2:'Handmade, real materials',w2p:'Hand-woven wool and cotton in lasting colors and heritage patterns.',w3:'Fast shipping',w3p:'2 to 7 business days to every Australian state.',about:'Specialists in heritage armrests, rugs and wall hangings, delivered to your door.',links:'Useful links',l1:'Returns & exchange policy',l2:'Privacy policy',l3:'Shipping & delivery',contact:'Contact us',wa:'WhatsApp',rights:'All rights reserved © 2026 Sadu House',waBtn:'WhatsApp us'};
+const T={notice:'Shipping Australia-wide · Authentic handwoven pieces',brand:'Sadu House',tagline:'Heritage armrests, rugs & hangings',cart:'Cart',heroEye:'Handwoven pieces',heroT:'Bring the desert into your majlis',heroP:'Armrests, rugs and wall hangings woven with sadu and desert motifs, delivered to your door.',shopNow:'Shop now',seeTents:'See armrests',catsEye:'Categories',catsT:'Products',sample:'Free shipping on orders over A$150. Pay easily with PayID.',whyEye:'Why us',whyT:'Why choose us',w1:'Pay with PayID',w1p:'Instant bank transfer from any Australian bank, no card needed.',w2:'Handmade, real materials',w2p:'Hand-woven wool and cotton in lasting colors and heritage patterns.',w3:'Fast shipping',w3p:'2 to 7 business days to every Australian state.',about:'Specialists in heritage armrests, rugs and wall hangings, delivered to your door.',links:'Useful links',l1:'Returns & exchange policy',l2:'Privacy policy',l3:'Shipping & delivery',contact:'Contact us',wa:'WhatsApp',rights:'All rights reserved © 2026 Sadu House',waBtn:'WhatsApp us',nHome:'Home',nShop:'Shop',nAcc:'Account'};
 const AR={};document.querySelectorAll('[data-i18n]').forEach(e=>{AR[e.dataset.i18n]??=e.textContent});
 
 function renderCats(){$('cats').innerHTML=CATS.map(([k,a,e])=>`<button class="cat" type="button" aria-pressed="${k===cat}" onclick="pick('${k}')">${L(a,e)}</button>`).join('')}
@@ -386,7 +408,11 @@ function card(x){const v=sel[x.id];
  ${x.sz?`<div class="szs">${x.sz.map((z,i)=>`<button type="button" class="sz${i===v.s?' on':''}" aria-pressed="${i===v.s}" onclick="setOpt('${x.id}','s',${i})">${L(z[0],z[1])}</button>`).join('')}</div>`:''}
  <div class="prow"><span class="price">${sar(pr)}${o?`<s>${sar(o)}</s>`:''}</span>
  <button class="add" type="button" onclick="add('${x.id}',this)">${L('أضف للسلة','Add to cart')}</button></div></div></article>`}
-function render(){$('grid').innerHTML=P.filter(x=>cat==='all'||x.c===cat).map(card).join('')}
+function render(){const q=($('q').value||'').trim().toLowerCase();const so=$('sort').value;
+ let list=P.filter(x=>(cat==='all'||x.c===cat)&&(!q||(x.ar+' '+x.en+' '+x.dar+' '+x.den).toLowerCase().includes(q)));
+ if(so)list=list.filter(x=>!x.custom).sort((a,b)=>(so==='lo'?1:-1)*(priceOf(a,0)-priceOf(b,0)));
+ $('grid').innerHTML=list.length?list.map(card).join(''):`<p class="empty" style="grid-column:1/-1">${L('ما لقينا منتج بهذا الاسم','No products match your search')}</p>`;
+ $('q').placeholder=L('ابحث عن منتج…','Search products…');[...$('sort').options].forEach((o,i)=>o.textContent=[L('الأحدث','Newest'),L('السعر: من الأقل','Price: low to high'),L('السعر: من الأعلى','Price: high to low')][i])}
 function setOpt(id,k,i){sel[id][k]=i;const x=byId(id);const el=$('p-'+id);if(el)el.outerHTML=card(x);if(pdId===id)drawPD()}
 let pdId=null;
 function openPD(id){pdId=id;$('pd').hidden=false;document.body.style.overflow='hidden';drawPD();$('pdBody').scrollTop=0}
