@@ -150,6 +150,14 @@ form.f{display:grid;gap:12px}
 .done{text-align:center;display:grid;gap:10px;padding-block:10px}
 .done .big{font-size:44px}
 .toast{position:fixed;top:calc(70px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--sand);padding:8px 16px;border-radius:999px;font-size:13px;z-index:60}
+.sw{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.dot{width:22px;height:22px;border-radius:50%;background:var(--c);border:2px solid var(--card);box-shadow:0 0 0 1px var(--line);padding:0}
+.dot.on{box-shadow:0 0 0 2px var(--ink)}
+.swn{font-size:12px;color:var(--muted)}
+.szs{display:flex;gap:6px;flex-wrap:wrap}
+.sz{font-size:12px;border:1px solid var(--line);background:var(--sand);color:var(--ink);border-radius:8px;padding:3px 8px;font-variant-numeric:tabular-nums}
+.sz.on{border-color:var(--coffee);background:var(--coffee);color:var(--sand)}
+@media (max-width:520px){.dot{width:20px;height:20px}.swn{display:none}.sz{font-size:11px;padding:3px 6px}}
 </style>
 </head>
 <body>
@@ -227,16 +235,28 @@ form.f{display:grid;gap:12px}
 <div class="toast" id="toast" hidden></div>
 <script>
 const CATS=[['all','الكل','All'],['mirka','مراكي','Armrests & cushions'],['rug','زوالي','Rugs'],['hang','تعليقات','Wall hangings']];
+const COL={red:['أحمر','Red','#8c1d18'],navy:['كحلي','Navy','#1f2f6b'],green:['أخضر','Green','#2f6b3a'],honey:['عسلي','Honey','#a8752c'],gold:['ذهبي','Gold','#c99a2e'],blue:['أزرق','Blue','#2a4f8a']};
+const SZ_RUG1=[['٨٠×٢٠٠ سم','80×200 cm',289],['١٠٠×٣٠٠ سم','100×300 cm',389]];
+const SZ_RUG2=[['١٢٠×١٨٠ سم','120×180 cm',399],['١٦٠×٢٣٠ سم','160×230 cm',549]];
+const SZ_HANG=[['٤٠×٦٠ سم','40×60 cm',149],['٦٠×٩٠ سم','60×90 cm',229]];
+const SZ_TREE=[['٤٠×٦٠ سم','40×60 cm',139],['٦٠×٩٠ سم','60×90 cm',219]];
+const ALL4=['red','navy','green','honey'];
 const P=[
- {id:'mirka-shdad',c:'mirka',ar:'مركى شداد سدو',en:'Sadu shdad armrest',dar:'مركى على شكل شداد الجمل، بأعمدة خشب ومسامير نحاسية.',den:'Camel-saddle armrest with wooden posts and brass studs.',p:349,tag:['الأكثر طلباً','Best seller']},
- {id:'mirka-red',c:'mirka',ar:'مركى سدو أحمر بشراشيب',en:'Red sadu armrest with tassels',dar:'منسوج يدوي بخطوط سدو وشراشيب ملونة.',den:'Handwoven sadu stripes with colored tassels.',p:229},
- {id:'cushion-kilim',c:'mirka',ar:'مخدة كليم منسوجة',en:'Woven kilim cushion',dar:'مخدة مستطيلة بنقشة نجمة البادية.',den:'Rectangular cushion with a Bedouin star motif.',p:89,o:119,tag:['خصم','Sale']},
- {id:'rug-sadu',c:'rug',ar:'زولية سدو ممر',en:'Sadu runner rug',dar:'زولية طويلة بنقشة السدو وأطراف شراشيب سوداء.',den:'Long sadu-pattern runner with black fringe.',p:289,tag:['جديد','New']},
- {id:'rug-shag',c:'rug',ar:'زولية صوف منفوشة',en:'Shaggy wool rug',dar:'صوف كثيف بألوان الأحمر والبرتقالي والأبيض.',den:'Dense wool in red, orange and white.',p:399},
- {id:'hang-red-camel',c:'hang',ar:'تعليقة الجمل وقت الغروب',en:'Camel at sunset hanging',dar:'تعليقة جدارية منسوجة يدوياً، بيت شعر وجمل ونخلة.',den:'Handwoven wall hanging: tent, camel and palm.',p:149},
- {id:'hang-blue-camel',c:'hang',ar:'تعليقة الجمال والنخلة',en:'Camels & palm hanging',dar:'سماء زرقاء وقمر ونخلة، شغل يدوي.',den:'Blue sky, moon and palm, handwoven.',p:149},
- {id:'hang-tree',c:'hang',ar:'تعليقة الشجرة والطيور',en:'Tree & birds hanging',dar:'شجرة وطيور على خلفية ذهبية.',den:'Tree and birds on a golden ground.',p:139}
+ {id:'mirka-shdad',c:'mirka',ar:'مركى شداد سدو',en:'Sadu shdad armrest',dar:'مركى على شكل شداد الجمل، بأعمدة خشب ومسامير نحاسية.',den:'Camel-saddle armrest with wooden posts and brass studs.',p:349,col:ALL4,tag:['الأكثر طلباً','Best seller']},
+ {id:'mirka-red',c:'mirka',ar:'مركى سدو بشراشيب',en:'Sadu armrest with tassels',dar:'منسوج يدوي بخطوط سدو وشراشيب ملونة.',den:'Handwoven sadu stripes with colored tassels.',p:229,col:ALL4},
+ {id:'cushion-kilim',c:'mirka',ar:'مخدة كليم منسوجة',en:'Woven kilim cushion',dar:'مخدة مستطيلة بنقشة نجمة البادية.',den:'Rectangular cushion with a Bedouin star motif.',p:89,o:119,col:ALL4,tag:['خصم','Sale']},
+ {id:'set-majlis',c:'mirka',ar:'طقم مراكي: ٢ مركى + ٢ مخدة',en:'Majlis set: 2 armrests + 2 cushions',dar:'طقم متناسق بنفس اللون، أوفر من شرائها بالحبة.',den:'A matching set in one color, cheaper than buying separately.',p:579,o:636,col:ALL4,tag:['طقم','Set']},
+ {id:'set-shdad',c:'mirka',ar:'طقم شداد: ٢ شداد + مخدة',en:'Shdad set: 2 saddle armrests + cushion',dar:'زوج شداد مع مخدة كليم بنفس اللون.',den:'A pair of saddle armrests with a matching kilim cushion.',p:729,o:787,col:ALL4,tag:['طقم','Set']},
+ {id:'rug-sadu',c:'rug',ar:'زولية سدو ممر',en:'Sadu runner rug',dar:'زولية طويلة بنقشة السدو وأطراف شراشيب سوداء.',den:'Long sadu-pattern runner with black fringe.',col:ALL4,sz:SZ_RUG1,tag:['جديد','New']},
+ {id:'rug-shag',c:'rug',ar:'زولية صوف منفوشة',en:'Shaggy wool rug',dar:'صوف كثيف منسوج يدوياً بألوان البادية.',den:'Dense hand-knotted wool in desert colors.',col:['red','navy','green'],sz:SZ_RUG2},
+ {id:'hang-red-camel',c:'hang',ar:'تعليقة الجمل وقت الغروب',en:'Camel at sunset hanging',dar:'تعليقة جدارية منسوجة يدوياً، بيت شعر وجمل ونخلة.',den:'Handwoven wall hanging: tent, camel and palm.',col:['red','navy','green'],sz:SZ_HANG},
+ {id:'hang-blue-camel',c:'hang',ar:'تعليقة الجمال والنخلة',en:'Camels & palm hanging',dar:'سماء زرقاء وقمر ونخلة، شغل يدوي.',den:'Blue sky, moon and palm, handwoven.',col:['blue'],sz:SZ_HANG},
+ {id:'hang-tree',c:'hang',ar:'تعليقة الشجرة والطيور',en:'Tree & birds hanging',dar:'شجرة وطيور، منسوجة يدوياً.',den:'Tree and birds, handwoven.',col:['gold','navy','green'],sz:SZ_TREE}
 ];
+const sel={};P.forEach(x=>sel[x.id]={c:0,s:0});
+const imgOf=(x,ci)=>`img/${x.id}${ci?'--'+x.col[ci]:''}.webp`;
+const priceOf=(x,si)=>x.sz?x.sz[si][2]:x.p;
+const oldOf=(x,si)=>x.o&&!x.sz?x.o:0;
 const SHOP={payid:'0470 536 016',payidRaw:'0470536016',wa:'61470536016',ship:15,freeOver:150};
 const STATES=['QLD','NSW','VIC','ACT','SA','WA','TAS','NT'];
 let lang='ar',cat='all',step='cart',order=null;
@@ -247,12 +267,13 @@ const num=n=>lang==='ar'?n.toLocaleString('ar-SA'):String(n);
 const sar=n=>lang==='ar'?(Math.round(n*2.45/5)*5).toLocaleString('ar-SA')+' ر.س':'A$'+n.toLocaleString('en-AU');
 const aud=n=>'A$'+n.toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2});
 const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let cart=store.get('sh_cart')||{};
+let cart=store.get('sh_cart2')||{};
 let cust=store.get('sh_cust')||{name:'',phone:'',email:'',addr:'',suburb:'',state:'QLD',pc:'',note:''};
 const byId=id=>P.find(x=>x.id===id);
-function items(){return Object.entries(cart).filter(([id,q])=>q>0&&byId(id)).map(([id,q])=>({x:byId(id),q}))}
-function totals(){const sub=items().reduce((s,{x,q})=>s+x.p*q,0);const ship=sub===0||sub>=SHOP.freeOver?0:SHOP.ship;return{sub,ship,tot:sub+ship}}
-function save(){store.set('sh_cart',cart);updateCount()}
+function items(){return Object.entries(cart).map(([k,q])=>{const [id,ci,si]=k.split('|');const x=byId(id);if(!x||q<=0||ci===undefined)return null;const c=+ci,z=+si;if(!x.col[c]||(x.sz&&!x.sz[z]))return null;return{k,x,q,c,z,price:priceOf(x,z)}}).filter(Boolean)}
+function optLabel(i,lng){const c=COL[i.x.col[i.c]];const parts=[];if(i.x.col.length>1)parts.push(lng==='ar'?c[0]:c[1]);if(i.x.sz)parts.push(lng==='ar'?i.x.sz[i.z][0]:i.x.sz[i.z][1]);return parts.join(' · ')}
+function totals(){const sub=items().reduce((s,i)=>s+i.price*i.q,0);const ship=sub===0||sub>=SHOP.freeOver?0:SHOP.ship;return{sub,ship,tot:sub+ship}}
+function save(){store.set('sh_cart2',cart);updateCount()}
 function updateCount(){$('count').textContent=num(items().reduce((s,i)=>s+i.q,0))}
 function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,1800)}
 
@@ -260,16 +281,18 @@ const T={notice:'Shipping Australia-wide · Authentic handwoven pieces',brand:'S
 const AR={};document.querySelectorAll('[data-i18n]').forEach(e=>{AR[e.dataset.i18n]??=e.textContent});
 
 function renderCats(){$('cats').innerHTML=CATS.map(([k,a,e])=>`<button class="cat" type="button" aria-pressed="${k===cat}" onclick="pick('${k}')">${L(a,e)}</button>`).join('')}
-function render(){
- $('grid').innerHTML=P.filter(x=>cat==='all'||x.c===cat).map(x=>`
- <article class="prod"><div class="img">${x.tag?`<span class="tag">${L(x.tag[0],x.tag[1])}</span>`:''}<img src="img/${x.id}.webp" alt="${L(x.ar,x.en)}" loading="lazy"></div>
+function card(x){const v=sel[x.id];const pr=priceOf(x,v.s),o=oldOf(x,v.s);
+ return `<article class="prod" id="p-${x.id}"><div class="img">${x.tag?`<span class="tag">${L(x.tag[0],x.tag[1])}</span>`:''}<img src="${imgOf(x,v.c)}" alt="${L(x.ar,x.en)}" loading="lazy"></div>
  <div class="pbody"><h3>${L(x.ar,x.en)}</h3><p>${L(x.dar,x.den)}</p>
- <div class="prow"><span class="price">${sar(x.p)}${x.o?`<s>${sar(x.o)}</s>`:''}</span>
- <button class="add" type="button" onclick="add('${x.id}',this)">${L('أضف للسلة','Add to cart')}</button></div></div></article>`).join('');
-}
+ ${x.col.length>1?`<div class="sw" role="group" aria-label="${L('اللون','Color')}">${x.col.map((k,i)=>`<button type="button" class="dot${i===v.c?' on':''}" style="--c:${COL[k][2]}" title="${L(COL[k][0],COL[k][1])}" aria-label="${L(COL[k][0],COL[k][1])}" aria-pressed="${i===v.c}" onclick="setOpt('${x.id}','c',${i})"></button>`).join('')}<span class="swn">${L(COL[x.col[v.c]][0],COL[x.col[v.c]][1])}</span></div>`:''}
+ ${x.sz?`<div class="szs">${x.sz.map((z,i)=>`<button type="button" class="sz${i===v.s?' on':''}" aria-pressed="${i===v.s}" onclick="setOpt('${x.id}','s',${i})">${L(z[0],z[1])}</button>`).join('')}</div>`:''}
+ <div class="prow"><span class="price">${sar(pr)}${o?`<s>${sar(o)}</s>`:''}</span>
+ <button class="add" type="button" onclick="add('${x.id}',this)">${L('أضف للسلة','Add to cart')}</button></div></div></article>`}
+function render(){$('grid').innerHTML=P.filter(x=>cat==='all'||x.c===cat).map(card).join('')}
+function setOpt(id,k,i){sel[id][k]=i;const x=byId(id);const el=$('p-'+id);if(el)el.outerHTML=card(x)}
 function pick(k){cat=k;renderCats();render()}
-function add(id,b){cart[id]=(cart[id]||0)+1;save();b.classList.add('done');b.textContent=L('تمت الإضافة ✓','Added ✓');toast(L('أضيف للسلة','Added to cart'));setTimeout(()=>{b.classList.remove('done');b.textContent=L('أضف للسلة','Add to cart')},1400)}
-function qty(id,d){cart[id]=Math.max(0,(cart[id]||0)+d);if(!cart[id])delete cart[id];save();draw()}
+function add(id,b){const v=sel[id];const key=`${id}|${v.c}|${v.s}`;cart[key]=(cart[key]||0)+1;save();b.classList.add('done');b.textContent=L('تمت الإضافة ✓','Added ✓');toast(L('أضيف للسلة','Added to cart'));setTimeout(()=>{b.classList.remove('done');b.textContent=L('أضف للسلة','Add to cart')},1400)}
+function qty(k,d){cart[k]=Math.max(0,(cart[k]||0)+d);if(!cart[k])delete cart[k];save();draw()}
 
 /* ---------- checkout sheet ---------- */
 const ORDER=['cart','details','pay','done'];
@@ -292,8 +315,8 @@ function draw(){
  if(step==='cart'){
   const it=items();
   if(!it.length){b.innerHTML=`<div class="empty"><p>${L('سلتك فاضية','Your cart is empty')}</p><button class="go" type="button" onclick="closeSheet();document.getElementById('shop').scrollIntoView()">${L('تسوّق المنتجات','Browse products')}</button></div>`;return}
-  b.innerHTML=it.map(({x,q})=>`<div class="line"><img src="img/${x.id}.webp" alt=""><div><h4>${L(x.ar,x.en)}</h4><small>${aud(x.p)}</small><br><button class="rm" type="button" onclick="qty('${x.id}',-${q})">${L('حذف','Remove')}</button></div>
-   <div class="qty"><button type="button" aria-label="+" onclick="qty('${x.id}',1)">+</button><span>${num(q)}</span><button type="button" aria-label="-" onclick="qty('${x.id}',-1)">−</button></div></div>`).join('')
+  b.innerHTML=it.map(i=>`<div class="line"><img src="${imgOf(i.x,i.c)}" alt=""><div><h4>${L(i.x.ar,i.x.en)}</h4>${optLabel(i,lang)?`<small>${optLabel(i,lang)}</small><br>`:''}<small>${aud(i.price)}</small><br><button class="rm" type="button" onclick="qty('${i.k}',-${i.q})">${L('حذف','Remove')}</button></div>
+   <div class="qty"><button type="button" aria-label="+" onclick="qty('${i.k}',1)">+</button><span>${num(i.q)}</span><button type="button" aria-label="-" onclick="qty('${i.k}',-1)">−</button></div></div>`).join('')
    +summary()+`<button class="go" type="button" onclick="openSheet('details')">${L('إتمام الطلب','Checkout')}</button>`;
  }
  if(step==='details'){
@@ -351,7 +374,7 @@ function draw(){
 }
 function sendOrder(){
  const t=totals();
- const lines=items().map(({x,q})=>`• ${x.en} / ${x.ar} × ${q} = A$${(x.p*q).toFixed(2)}`).join('\n');
+ const lines=items().map(i=>{const o=optLabel(i,'en');return `• ${i.x.en}${o?' ('+o+')':''} / ${i.x.ar}${optLabel(i,'ar')?' ('+optLabel(i,'ar')+')':''} × ${i.q} = A$${(i.price*i.q).toFixed(2)}`}).join('\n');
  const msg=`New order ${order.no}\n\n${lines}\n\nSubtotal: A$${t.sub.toFixed(2)}\nShipping: A$${t.ship.toFixed(2)}\nTOTAL: A$${t.tot.toFixed(2)}\nPaid via PayID (ref ${order.no})\n\nName: ${cust.name}\nMobile: ${cust.phone}\nEmail: ${cust.email}\nAddress: ${cust.addr}, ${cust.suburb} ${cust.state} ${cust.pc}`+(cust.note?`\nNotes: ${cust.note}`:'');
  const a=document.createElement('a');a.href=`https://wa.me/${SHOP.wa}?text=${encodeURIComponent(msg)}`;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
  cart={};save();openSheet('done');order=null;
