@@ -180,6 +180,45 @@ form.f{display:grid;gap:12px}
 .specs dt{color:var(--muted);font-size:13px}
 .specs dd{margin:0;font-weight:500}
 #pd .sw .swn{display:none}
+.steps{display:flex;gap:4px;list-style:none;margin:0;padding:12px 16px 0;counter-reset:s}
+.steps li{flex:1;height:auto;background:none;display:grid;justify-items:center;gap:3px;position:relative}
+.steps li span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--line);color:var(--muted);z-index:1}
+.steps li small{font-size:10.5px;color:var(--muted);white-space:nowrap}
+.steps li::before{content:"";position:absolute;top:13px;inset-inline-start:-50%;width:100%;height:2px;background:var(--line)}
+.steps li:first-child::before{display:none}
+.steps li.ok span{background:var(--ok);color:#fff}.steps li.ok::before,.steps li.cur::before{background:var(--ok)}
+.steps li.cur span{background:var(--coffee);color:var(--sand)}.steps li.cur small{color:var(--ink);font-weight:600}
+.lead{margin:0}
+.ph{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+.ph span{padding:10px;background:var(--sand);font-weight:500;white-space:nowrap}
+.ph input{border:0!important;border-radius:0!important}
+.card2{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:6px}
+.rowx{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.lnk{background:none;border:0;color:var(--saffron);font-weight:600;padding:0}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px;cursor:pointer}
+.opt.on{border-color:var(--coffee)}
+.opt input{accent-color:var(--coffee);width:18px;height:18px}
+.opt small{display:block;color:var(--muted);font-size:12px}
+.pidlogo{font-weight:800;color:#fff;background:#00a3ad;border-radius:6px;padding:2px 8px;font-size:12px}
+.agree{display:flex;gap:8px;align-items:flex-start;font-size:13px}
+.agree input{accent-color:var(--coffee);width:18px;height:18px;flex:none;margin-top:2px}
+.go.ghost2{background:transparent;color:var(--coffee);border:1px solid var(--coffee)}
+.big.ok{width:64px;height:64px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;margin-inline:auto;font-size:34px}
+.track{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;font-size:11px}
+.track div{border-top:4px solid var(--line);padding-top:4px;color:var(--muted)}
+.track .on{border-color:var(--ok);color:var(--ink);font-weight:600}
+.prof{grid-template-columns:auto 1fr;align-items:center}
+.av{width:48px;height:48px;border-radius:50%;background:var(--coffee);color:var(--sand);display:grid;place-items:center;font-size:20px;font-weight:700}
+.menu{display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;color:var(--ink);text-decoration:none;font:inherit;width:100%;text-align:start}
+.menu small{color:var(--muted)}
+.menu.out{color:var(--sadu1)}
+.badge{background:var(--saffron);color:#fff;border-radius:999px;padding:0 8px;font-size:12px}
+.st{font-size:11px;background:#f5d9a8;color:#6b4100;border-radius:999px;padding:2px 8px}
+.mini{display:flex;gap:6px}.mini img{width:44px;height:44px;object-fit:contain;background:#fff;border-radius:8px;border:1px solid var(--line)}
+.empty .big{font-size:42px}
+.acc{white-space:nowrap}
+@media (max-width:420px){.acc #accName{display:none}.bar{gap:8px}.pill{padding:6px 10px}}
 </style>
 </head>
 <body>
@@ -195,6 +234,7 @@ form.f{display:grid;gap:12px}
     </a>
     <span class="grow"></span>
     <button class="pill" id="lang" type="button">English</button>
+    <button class="pill acc" id="accBtn" type="button" onclick="openSheet('account')">👤 <span id="accName">حسابي</span></button>
     <button class="cart" id="cartBtn" type="button"><span id="count">0</span><b data-i18n="cart">السلة</b></button>
   </div>
 </header>
@@ -329,7 +369,6 @@ let cust=store.get('sh_cust')||{name:'',phone:'',email:'',addr:'',suburb:'',stat
 const byId=id=>P.find(x=>x.id===id);
 function items(){return Object.entries(cart).map(([k,q])=>{const [id,ci,si]=k.split('|');const x=byId(id);if(!x||q<=0||ci===undefined)return null;const c=+ci,z=+si;if(!x.col[c]||(x.sz&&!x.sz[z]))return null;return{k,x,q,c,z,price:priceOf(x,z)}}).filter(Boolean)}
 function optLabel(i,lng){const c=COL[i.x.col[i.c]];const parts=[];if(i.x.col.length>1)parts.push(lng==='ar'?c[0]:c[1]);if(i.x.sz)parts.push(lng==='ar'?i.x.sz[i.z][0]:i.x.sz[i.z][1]);return parts.join(' · ')}
-function totals(){const sub=items().reduce((s,i)=>s+i.price*i.q,0);const ship=sub===0||sub>=SHOP.freeOver?0:SHOP.ship;return{sub,ship,tot:sub+ship}}
 function save(){store.set('sh_cart2',cart);updateCount()}
 function updateCount(){$('count').textContent=num(items().reduce((s,i)=>s+i.q,0))}
 function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,1800)}
@@ -367,98 +406,157 @@ function pick(k){cat=k;renderCats();render()}
 function add(id,b){const v=sel[id];const key=`${id}|${v.c}|${v.s}`;cart[key]=(cart[key]||0)+1;save();b.classList.add('done');b.textContent=L('تمت الإضافة ✓','Added ✓');toast(L('أضيف للسلة','Added to cart'));setTimeout(()=>{if(b.isConnected){b.classList.remove('done');b.textContent=L('أضف للسلة','Add to cart')}},1400)}
 function qty(k,d){cart[k]=Math.max(0,(cart[k]||0)+d);if(!cart[k])delete cart[k];save();draw()}
 
-/* ---------- checkout sheet ---------- */
-const ORDER=['cart','details','pay','done'];
-function openSheet(s){step=s||'cart';$('sheet').hidden=false;document.body.style.overflow='hidden';draw()}
-function closeSheet(){$('sheet').hidden=true;document.body.style.overflow='';if(step==='done'){step='cart'}}
+/* ---------- account + checkout (Salla-style) ---------- */
+let user=store.get('sh_user');            // {name,phone,email}
+let addr=store.get('sh_addr')||null;       // {addr,suburb,state,pc,note}
+let orders=store.get('sh_orders')||[];
+let shipM='std', after='address', pendingOrder=null;
+const FLOW=['cart','login','address','ship','pay','done'];
+const FLOW_L={cart:['السلة','Cart'],login:['الدخول','Sign in'],address:['العنوان','Address'],ship:['الشحن','Shipping'],pay:['الدفع','Payment'],done:['تم','Done']};
+const SHIPS={std:{ar:'شحن عادي',en:'Standard shipping',dar:'٣–٧ أيام عمل · Australia Post',den:'3–7 business days · Australia Post',p:15},exp:{ar:'شحن سريع',en:'Express shipping',dar:'١–٣ أيام عمل · Express Post',den:'1–3 business days · Express Post',p:29}};
+function shipCost(sub){const m=SHIPS[shipM];if(shipM==='std'&&sub>=SHOP.freeOver)return 0;return sub?m.p:0}
+function totals(){const sub=items().reduce((s,i)=>s+i.price*i.q,0);const ship=shipCost(sub);return{sub,ship,tot:sub+ship}}
+function updateUser(){$('accName').textContent=user?user.name.split(' ')[0]:L('حسابي','Account')}
+function openSheet(s){step=s||'cart';$('sheet').hidden=false;document.body.style.overflow='hidden';draw();$('sheetBody').scrollTop=0}
+function closeSheet(){$('sheet').hidden=true;document.body.style.overflow='';if(step==='done')step='cart'}
+function next(){const it=items();if(!it.length)return openSheet('cart');if(!user){after='address';return openSheet('login')}if(!addr)return openSheet('address');openSheet('ship')}
 function summary(){const t=totals();return `<div class="sum">
  <div><span>${L('المجموع','Subtotal')}</span><span>${aud(t.sub)}</span></div>
  <div><span>${L('الشحن','Shipping')}</span><span>${t.ship?aud(t.ship):L('مجاني','Free')}</span></div>
- ${t.ship&&t.sub?`<div class="hint">${L(`شحن مجاني للطلبات فوق A$${SHOP.freeOver}`,`Free shipping over A$${SHOP.freeOver}`)}</div>`:''}
+ ${shipM==='std'&&t.ship&&t.sub?`<div class="hint">${L(`أضف ${aud(SHOP.freeOver-t.sub)} وتحصل على شحن مجاني`,`Add ${aud(SHOP.freeOver-t.sub)} for free shipping`)}</div>`:''}
  <div class="tot"><span>${L('الإجمالي','Total')}</span><span>${aud(t.tot)}</span></div>
- ${lang==='ar'?`<div class="hint">الدفع بالدولار الأسترالي (≈ ${sar(t.tot)})</div>`:''}</div>`}
+ <div class="hint">${L('شامل GST · ','GST included · ')}${lang==='ar'?`≈ ${sar(t.tot)}`:'AUD'}</div></div>`}
+function stepper(){const flow=FLOW.filter(s=>s!=='login'||!user||step==='login');const i=flow.indexOf(step);
+ return flow.map((s,k)=>`<li class="${k<i?'ok':k===i?'cur':''}"><span>${k<i?'✓':num(k+1)}</span><small>${L(...FLOW_L[s])}</small></li>`).join('')}
 function draw(){
- const titles={cart:L('السلة','Your cart'),details:L('بيانات التوصيل','Delivery details'),pay:L('الدفع عبر PayID','Pay with PayID'),done:L('تم استلام طلبك','Order received')};
+ const isFlow=FLOW.includes(step);
+ const titles={cart:L('سلة المشتريات','Shopping cart'),login:L('تسجيل الدخول','Sign in'),address:L('عنوان التوصيل','Delivery address'),ship:L('طريقة الشحن','Shipping method'),pay:L('الدفع','Payment'),done:L('تم استلام طلبك','Order placed'),account:L('حسابي','My account'),orders:L('طلباتي','My orders')};
  $('sheetTitle').textContent=titles[step];
- const i=ORDER.indexOf(step);
- $('steps').innerHTML=ORDER.map((_,k)=>`<li class="${k<=i?'on':''}"></li>`).join('');
- $('backBtn').hidden=!(step==='details'||step==='pay');
+ $('steps').hidden=!isFlow||step==='done';
+ if(isFlow)$('steps').innerHTML=stepper();
+ const prev={login:'cart',address:'cart',ship:'address',pay:'ship',orders:'account'}[step];
+ $('backBtn').hidden=!prev; $('backBtn').onclick=()=>openSheet(prev);
  $('backBtn').textContent=lang==='ar'?'→':'←';
  const b=$('sheetBody');
  if(step==='cart'){
   const it=items();
-  if(!it.length){b.innerHTML=`<div class="empty"><p>${L('سلتك فاضية','Your cart is empty')}</p><button class="go" type="button" onclick="closeSheet();document.getElementById('shop').scrollIntoView()">${L('تسوّق المنتجات','Browse products')}</button></div>`;return}
+  if(!it.length){b.innerHTML=`<div class="empty"><div class="big">🛒</div><p>${L('سلتك فاضية','Your cart is empty')}</p><button class="go" type="button" onclick="closeSheet();document.getElementById('shop').scrollIntoView()">${L('تسوّق المنتجات','Browse products')}</button></div>`;return}
   b.innerHTML=it.map(i=>`<div class="line"><img src="${imgOf(i.x,i.c)}" alt=""><div><h4>${L(i.x.ar,i.x.en)}</h4>${optLabel(i,lang)?`<small>${optLabel(i,lang)}</small><br>`:''}<small>${aud(i.price)}</small><br><button class="rm" type="button" onclick="qty('${i.k}',-${i.q})">${L('حذف','Remove')}</button></div>
    <div class="qty"><button type="button" aria-label="+" onclick="qty('${i.k}',1)">+</button><span>${num(i.q)}</span><button type="button" aria-label="-" onclick="qty('${i.k}',-1)">−</button></div></div>`).join('')
-   +summary()+`<button class="go" type="button" onclick="openSheet('details')">${L('إتمام الطلب','Checkout')}</button>`;
+   +summary()+`<button class="go" type="button" onclick="next()">${L('إتمام الطلب','Checkout')}</button>`;
  }
- if(step==='details'){
-  b.innerHTML=`<form class="f" id="df" novalidate>
-   <label>${L('الاسم الكامل','Full name')}<input id="f_name" autocomplete="name" value="${esc(cust.name)}" required></label>
-   <div class="two"><label>${L('رقم الجوال','Mobile')}<input id="f_phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="04XX XXX XXX" value="${esc(cust.phone)}" required></label>
-   <label>${L('الإيميل','Email')}<input id="f_email" type="email" autocomplete="email" dir="ltr" value="${esc(cust.email)}" required></label></div>
-   <label>${L('العنوان (الشارع ورقم البيت)','Street address')}<input id="f_addr" autocomplete="street-address" dir="ltr" value="${esc(cust.addr)}" required></label>
-   <label>${L('الضاحية / المدينة','Suburb')}<input id="f_suburb" autocomplete="address-level2" dir="ltr" value="${esc(cust.suburb)}" required></label>
-   <div class="two"><label>${L('الولاية','State')}<select id="f_state">${STATES.map(s=>`<option ${s===cust.state?'selected':''}>${s}</option>`).join('')}</select></label>
-   <label>${L('الرمز البريدي','Postcode')}<input id="f_pc" inputmode="numeric" maxlength="4" dir="ltr" value="${esc(cust.pc)}" required></label></div>
-   <label>${L('ملاحظات (اختياري)','Notes (optional)')}<textarea id="f_note" rows="2">${esc(cust.note)}</textarea></label>
-   <div class="err" id="f_err"></div>
-   ${summary()}
-   <button class="go" type="submit">${L('متابعة للدفع','Continue to payment')}</button></form>`;
-  $('df').addEventListener('submit',e=>{e.preventDefault();
-   const v=k=>$('f_'+k).value.trim();
-   cust={name:v('name'),phone:v('phone'),email:v('email'),addr:v('addr'),suburb:v('suburb'),state:$('f_state').value,pc:v('pc'),note:v('note')};
-   store.set('sh_cust',cust);
+ if(step==='login'){
+  b.innerHTML=`<p class="lead">${L('سجّل دخولك برقم جوالك عشان نحفظ عناوينك وطلباتك.','Sign in with your mobile so we can save your addresses and orders.')}</p>
+  <form class="f" id="lf" novalidate>
+   <label>${L('رقم الجوال','Mobile number')}<div class="ph"><span dir="ltr">🇦🇺 +61</span><input id="l_phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" placeholder="4XX XXX XXX" value="${esc((user&&user.phone)||'')}"></div></label>
+   <label>${L('الاسم الكامل','Full name')}<input id="l_name" autocomplete="name" value="${esc((user&&user.name)||'')}"></label>
+   <label>${L('البريد الإلكتروني','Email')}<input id="l_email" type="email" autocomplete="email" dir="ltr" value="${esc((user&&user.email)||'')}"></label>
+   <div class="err" id="l_err"></div>
+   <button class="go" type="submit">${L('دخول ومتابعة','Sign in & continue')}</button></form>
+  <p class="note" style="margin:0">${L('بياناتك محفوظة على جهازك فقط.','Your details are saved on this device only.')}</p>`;
+  $('lf').addEventListener('submit',e=>{e.preventDefault();
+   const ph=$('l_phone').value.replace(/\D/g,'').replace(/^61/,'').replace(/^0/,'');
+   const nm=$('l_name').value.trim(),em=$('l_email').value.trim();
    let err='';
-   if(!cust.name||!cust.addr||!cust.suburb)err=L('عبّ الاسم والعنوان والضاحية','Please fill in your name, address and suburb.');
-   else if(!/^(\+?61|0)4\d{8}$/.test(cust.phone.replace(/\s/g,'')))err=L('اكتب رقم جوال أسترالي صحيح يبدأ بـ 04','Enter a valid Australian mobile starting with 04.');
-   else if(!/^\S+@\S+\.\S+$/.test(cust.email))err=L('اكتب إيميل صحيح','Enter a valid email address.');
-   else if(!/^\d{4}$/.test(cust.pc))err=L('الرمز البريدي لازم ٤ أرقام','Postcode must be 4 digits.');
-   if(err){$('f_err').textContent=err;return}
-   if(!order){const d=new Date();order={no:'SH'+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.floor(1000+Math.random()*9000)}}
-   openSheet('pay');
+   if(!/^4\d{8}$/.test(ph))err=L('اكتب رقم جوال أسترالي صحيح، مثل 412 345 678','Enter a valid Australian mobile, e.g. 412 345 678');
+   else if(nm.length<2)err=L('اكتب اسمك','Enter your name');
+   else if(!/^\S+@\S+\.\S+$/.test(em))err=L('اكتب بريد إلكتروني صحيح','Enter a valid email');
+   if(err){$('l_err').textContent=err;return}
+   user={name:nm,phone:'0'+ph,email:em};store.set('sh_user',user);updateUser();toast(L(`أهلاً ${nm.split(' ')[0]}`,`Welcome ${nm.split(' ')[0]}`));
+   if(after==='account')openSheet('account');else next();
   });
  }
+ if(step==='address'){
+  const a=addr||{addr:'',suburb:'',state:'QLD',pc:'',note:''};
+  b.innerHTML=`<form class="f" id="af" novalidate>
+   <label>${L('العنوان (رقم البيت والشارع)','Street address')}<input id="a_addr" autocomplete="street-address" dir="ltr" placeholder="12 Queen St" value="${esc(a.addr)}"></label>
+   <label>${L('الضاحية / المدينة','Suburb')}<input id="a_suburb" autocomplete="address-level2" dir="ltr" value="${esc(a.suburb)}"></label>
+   <div class="two"><label>${L('الولاية','State')}<select id="a_state">${STATES.map(s=>`<option ${s===a.state?'selected':''}>${s}</option>`).join('')}</select></label>
+   <label>${L('الرمز البريدي','Postcode')}<input id="a_pc" inputmode="numeric" maxlength="4" dir="ltr" value="${esc(a.pc)}"></label></div>
+   <label>${L('ملاحظات للتوصيل (اختياري)','Delivery notes (optional)')}<textarea id="a_note" rows="2">${esc(a.note)}</textarea></label>
+   <div class="err" id="a_err"></div>
+   <button class="go" type="submit">${L('حفظ ومتابعة','Save & continue')}</button></form>`;
+  $('af').addEventListener('submit',e=>{e.preventDefault();
+   const v=k=>$('a_'+k).value.trim();
+   const n={addr:v('addr'),suburb:v('suburb'),state:$('a_state').value,pc:v('pc'),note:v('note')};
+   let err='';
+   if(!n.addr||!n.suburb)err=L('اكتب العنوان والضاحية','Enter your street address and suburb');
+   else if(!/^\d{4}$/.test(n.pc))err=L('الرمز البريدي لازم ٤ أرقام','Postcode must be 4 digits');
+   if(err){$('a_err').textContent=err;return}
+   addr=n;store.set('sh_addr',addr);openSheet('ship');
+  });
+ }
+ if(step==='ship'){
+  const sub=totals().sub;
+  b.innerHTML=`<div class="card2"><div class="rowx"><b>${L('التوصيل إلى','Deliver to')}</b><button class="lnk" type="button" onclick="openSheet('address')">${L('تغيير','Change')}</button></div>
+   <div dir="ltr" style="text-align:start">${esc(user.name)}<br>${esc(addr.addr)}, ${esc(addr.suburb)} ${addr.state} ${esc(addr.pc)}<br>${esc(user.phone)}</div></div>
+   <div class="opts">${Object.entries(SHIPS).map(([k,m])=>`<label class="opt${shipM===k?' on':''}"><input type="radio" name="ship" ${shipM===k?'checked':''} onchange="shipM='${k}';draw()">
+    <div><b>${L(m.ar,m.en)}</b><small>${L(m.dar,m.den)}</small></div><span>${k==='std'&&sub>=SHOP.freeOver?L('مجاني','Free'):aud(m.p)}</span></label>`).join('')}</div>
+   ${summary()}<button class="go" type="button" onclick="openSheet('pay')">${L('متابعة للدفع','Continue to payment')}</button>`;
+ }
  if(step==='pay'){
-  const t=totals();order.total=t.tot;
-  b.innerHTML=`<p style="margin:0">${L('حوّل المبلغ من تطبيق بنكك عبر PayID، واكتب رقم الطلب في خانة المرجع (Reference):','Transfer the total from your banking app using PayID, and put your order number in the reference:')}</p>
+  const t=totals();
+  if(!pendingOrder){const d=new Date();pendingOrder='SH'+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+Math.floor(1000+Math.random()*9000)}
+  b.innerHTML=`<div class="opts"><label class="opt on"><input type="radio" checked><div><b>PayID</b><small>${L('تحويل فوري من تطبيق أي بنك أسترالي','Instant transfer from any Australian banking app')}</small></div><span class="pidlogo">PayID</span></label></div>
   <div class="payid">
    <div class="row"><div><div class="k">PayID (${L('رقم جوال','mobile')})</div><div class="v">${SHOP.payid}</div></div><button class="cp" type="button" onclick="copy('${SHOP.payidRaw}')">${L('نسخ','Copy')}</button></div>
    <div class="row"><div><div class="k">${L('المبلغ','Amount')}</div><div class="v">${aud(t.tot)}</div></div><button class="cp" type="button" onclick="copy('${t.tot.toFixed(2)}')">${L('نسخ','Copy')}</button></div>
-   <div class="row"><div><div class="k">${L('المرجع (رقم الطلب)','Reference (order no.)')}</div><div class="v">${order.no}</div></div><button class="cp" type="button" onclick="copy('${order.no}')">${L('نسخ','Copy')}</button></div>
+   <div class="row"><div><div class="k">${L('المرجع (رقم الطلب)','Reference (order no.)')}</div><div class="v">${pendingOrder}</div></div><button class="cp" type="button" onclick="copy('${pendingOrder}')">${L('نسخ','Copy')}</button></div>
   </div>
   <ol class="steplist">
    <li>${L('افتح تطبيق البنك ← Pay Anyone ← PayID','Open your bank app → Pay Anyone → PayID')}</li>
    <li>${L('اختر Mobile واكتب الرقم أعلاه وتأكد من اسم المستلم','Choose Mobile, enter the number above and check the payee name')}</li>
-   <li>${L('اكتب المبلغ ورقم الطلب في المرجع، ثم حوّل','Enter the amount and order number as reference, then pay')}</li>
-   <li>${L('ارجع هنا واضغط الزر تحت لإرسال الطلب','Come back here and tap the button below to send your order')}</li>
+   <li>${L('اكتب المبلغ، وحط رقم الطلب في خانة المرجع، ثم حوّل','Enter the amount and order number as reference, then pay')}</li>
+   <li>${L('ارجع هنا واضغط "تأكيد الطلب"','Come back and tap "Place order"')}</li>
   </ol>
   ${summary()}
-  <button class="go wa2" type="button" onclick="sendOrder()">${L('حوّلت ✓ أرسل الطلب على واتساب','I’ve paid ✓ Send order via WhatsApp')}</button>
-  <p class="note" style="margin:0">${L('نجهّز طلبك ونشحنه بعد ما نتأكد من وصول التحويل.','We prepare and ship your order once the transfer is confirmed.')}</p>`;
+  <label class="agree"><input type="checkbox" id="agree"> ${L('حوّلت المبلغ وأوافق على سياسة الاستبدال والاسترجاع','I have paid and agree to the returns policy')}</label>
+  <div class="err" id="p_err"></div>
+  <button class="go wa2" type="button" onclick="placeOrder()">${L('تأكيد الطلب','Place order')}</button>`;
  }
  if(step==='done'){
-  b.innerHTML=`<div class="done"><div class="big">✓</div><h3>${L('شكراً لك!','Thank you!')}</h3>
-  <p>${L('رقم طلبك','Your order number')}: <b dir="ltr">${order.no}</b></p>
-  <p style="color:var(--muted)">${L('أرسلنا تفاصيل طلبك على واتساب. بنأكد لك الطلب أول ما يوصلنا التحويل ونرسل لك رقم التتبع.','Your order details went to WhatsApp. We will confirm as soon as your transfer arrives and send you tracking.')}</p>
+  const o=orders[0];
+  b.innerHTML=`<div class="done"><div class="big ok">✓</div><h3>${L(`شكراً ${user.name.split(' ')[0]}!`,`Thank you, ${user.name.split(' ')[0]}!`)}</h3>
+  <p>${L('رقم طلبك','Your order number')}: <b dir="ltr">${o.no}</b></p>
+  <div class="track"><div class="on">${L('تم الطلب','Placed')}</div><div>${L('تأكيد الدفع','Payment confirmed')}</div><div>${L('تم الشحن','Shipped')}</div><div>${L('تم التوصيل','Delivered')}</div></div>
+  <p style="color:var(--muted)">${L('وصلتنا تفاصيل طلبك على واتساب. بنأكد لك أول ما يوصل التحويل ونرسل لك رقم التتبع.','Your order details were sent to us on WhatsApp. We will confirm once your transfer arrives and send you tracking.')}</p>
   <p style="font-size:13px">${L('إذا ما انفتح واتساب، راسلنا على','If WhatsApp did not open, message us on')} <a dir="ltr" href="https://wa.me/${SHOP.wa}" target="_blank" rel="noopener">${SHOP.payid}</a></p>
-  <button class="go" type="button" onclick="closeSheet()">${L('رجوع للمتجر','Back to shop')}</button></div>`;
+  <button class="go" type="button" onclick="openSheet('orders')">${L('عرض طلباتي','View my orders')}</button>
+  <button class="go ghost2" type="button" onclick="closeSheet()">${L('متابعة التسوق','Continue shopping')}</button></div>`;
+ }
+ if(step==='account'){
+  if(!user){after='account';step='login';return draw()}
+  b.innerHTML=`<div class="card2 prof"><div class="av">${esc(user.name.trim()[0]||'؟')}</div><div><b>${esc(user.name)}</b><br><small dir="ltr">${esc(user.phone)} · ${esc(user.email)}</small></div></div>
+  <button class="menu" type="button" onclick="openSheet('orders')"><span>📦 ${L('طلباتي','My orders')}</span><span class="badge">${num(orders.length)}</span></button>
+  <button class="menu" type="button" onclick="after='account';openSheet('address')"><span>📍 ${L('عنوان التوصيل','Delivery address')}</span><small>${addr?esc(addr.suburb+' '+addr.state):L('لا يوجد','None')}</small></button>
+  <button class="menu" type="button" onclick="after='account';step='login';draw()"><span>👤 ${L('تعديل بياناتي','Edit my details')}</span></button>
+  <a class="menu" href="https://wa.me/${SHOP.wa}" target="_blank" rel="noopener"><span>💬 ${L('خدمة العملاء','Customer support')}</span></a>
+  <button class="menu out" type="button" onclick="logout()"><span>${L('تسجيل الخروج','Sign out')}</span></button>`;
+ }
+ if(step==='orders'){
+  if(!orders.length){b.innerHTML=`<div class="empty"><p>${L('ما عندك طلبات للحين','No orders yet')}</p></div>`;return}
+  b.innerHTML=orders.map(o=>`<div class="card2"><div class="rowx"><b dir="ltr">${o.no}</b><span class="st">${L('بانتظار تأكيد الدفع','Awaiting payment confirmation')}</span></div>
+   <small>${new Date(o.at).toLocaleDateString(lang==='ar'?'ar':'en-AU')}</small>
+   <div class="mini">${o.items.map(i=>`<img src="${i.img}" alt="">`).join('')}</div>
+   <div class="rowx"><span>${num(o.items.reduce((s,i)=>s+i.q,0))} ${L('قطعة','items')}</span><b>${aud(o.total)}</b></div></div>`).join('');
  }
 }
-function sendOrder(){
- const t=totals();
- const lines=items().map(i=>{const o=optLabel(i,'en');return `• ${i.x.en}${o?' ('+o+')':''} / ${i.x.ar}${optLabel(i,'ar')?' ('+optLabel(i,'ar')+')':''} × ${i.q} = A$${(i.price*i.q).toFixed(2)}`}).join('\n');
- const msg=`New order ${order.no}\n\n${lines}\n\nSubtotal: A$${t.sub.toFixed(2)}\nShipping: A$${t.ship.toFixed(2)}\nTOTAL: A$${t.tot.toFixed(2)}\nPaid via PayID (ref ${order.no})\n\nName: ${cust.name}\nMobile: ${cust.phone}\nEmail: ${cust.email}\nAddress: ${cust.addr}, ${cust.suburb} ${cust.state} ${cust.pc}`+(cust.note?`\nNotes: ${cust.note}`:'');
+function placeOrder(){
+ if(!$('agree').checked){$('p_err').textContent=L('أكّد أنك حوّلت المبلغ','Please confirm you have paid');return}
+ const t=totals(),it=items();
+ const o={no:pendingOrder,at:Date.now(),total:t.tot,items:it.map(i=>({img:imgOf(i.x,i.c),q:i.q}))};
+ const lines=it.map(i=>{const oe=optLabel(i,'en'),oa=optLabel(i,'ar');return `• ${i.x.en}${oe?' ('+oe+')':''} / ${i.x.ar}${oa?' ('+oa+')':''} × ${i.q} = A$${(i.price*i.q).toFixed(2)}`}).join('\n');
+ const msg=`🧾 New order ${o.no}\n\n${lines}\n\nSubtotal: A$${t.sub.toFixed(2)}\nShipping (${SHIPS[shipM].en}): A$${t.ship.toFixed(2)}\nTOTAL: A$${t.tot.toFixed(2)}\nPaid via PayID, ref ${o.no}\n\nName: ${user.name}\nMobile: ${user.phone}\nEmail: ${user.email}\nAddress: ${addr.addr}, ${addr.suburb} ${addr.state} ${addr.pc}`+(addr.note?`\nNotes: ${addr.note}`:'');
  const a=document.createElement('a');a.href=`https://wa.me/${SHOP.wa}?text=${encodeURIComponent(msg)}`;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
- cart={};save();openSheet('done');order=null;
+ orders.unshift(o);store.set('sh_orders',orders);cart={};save();pendingOrder=null;openSheet('done');
 }
+function logout(){user=null;try{localStorage.removeItem('sh_user')}catch(e){}updateUser();closeSheet();toast(L('تم تسجيل الخروج','Signed out'))}
 function copy(v){
  const ok=()=>toast(L('تم النسخ','Copied'));
  if(navigator.clipboard)navigator.clipboard.writeText(v).then(ok,()=>toast(v));else toast(v);
 }
 $('cartBtn').onclick=()=>openSheet('cart');
 $('closeBtn').onclick=closeSheet;
-$('backBtn').onclick=()=>openSheet(step==='pay'?'details':'cart');
 $('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
 $('pd').addEventListener('click',e=>{if(e.target.id==='pd')closePD()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('pd').hidden)closePD();else if(!$('sheet').hidden)closeSheet()}});
@@ -468,10 +566,10 @@ $('lang').onclick=()=>{
  document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
  document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=(lang==='ar'?AR:T)[e.dataset.i18n]);
  $('lang').textContent=lang==='ar'?'English':'العربية';
- updateCount();renderCats();render();if(!$('sheet').hidden)draw();if(pdId)drawPD();
+ updateCount();updateUser();renderCats();render();if(!$('sheet').hidden)draw();if(pdId)drawPD();
 };
 document.documentElement.lang='ar';document.documentElement.dir='rtl';
-updateCount();renderCats();render();
+updateUser();updateCount();renderCats();render();
 </script>
 
 
