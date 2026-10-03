@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="مراكي وزوالي وتعليقات جدارية منسوجة يدوياً بنقشات السدو، توصيل لجميع مناطق المملكة.">
+<meta property="og:title" content="متجر دار الكشتة">
+<meta property="og:image" content="img/hang-red-camel.webp">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>متجر دار الكشتة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+/* Layout: Arabic-first RTL storefront — Sadu-weave band, dusk hero, category chips, product grid, trust row, footer */
+:root{
+  --sand:#f6eee2; --card:#fffaf3; --ink:#2b1d14; --muted:#7a6656; --line:#e6d6c2;
+  --coffee:#5a2e1a; --saffron:#c8781e; --sadu1:#8c1d18; --sadu2:#1f1a17; --ok:#2f7a4a;
+  --display:"Reem Kufi","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --body:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --sand:#1a1410; --card:#241b15; --ink:#f3e7d6; --muted:#b39c86; --line:#3a2c22;
+  --coffee:#e0b48a; --saffron:#e3953a; --sadu1:#b8352c; --sadu2:#0e0b09; --ok:#5fb67f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --sand:#1a1410; --card:#241b15; --ink:#f3e7d6; --muted:#b39c86; --line:#3a2c22;
+  --coffee:#e0b48a; --saffron:#e3953a; --sadu1:#b8352c; --sadu2:#0e0b09; --ok:#5fb67f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--sand);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.7}
+a{color:inherit}
+.wrap{max-width:1120px;margin-inline:auto;padding-inline:16px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.25}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--saffron);outline-offset:2px}
+
+.sadu{height:14px;background:
+  repeating-linear-gradient(90deg,var(--sadu1) 0 14px,var(--sadu2) 14px 18px,#e9d8bd 18px 22px,var(--sadu2) 22px 26px,var(--sadu1) 26px 40px);
+  border-block:3px solid var(--sadu2)}
+.notice{background:var(--sadu2);color:#f3e7d6;text-align:center;font-size:13px;padding-block:6px}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--sand);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:12px;padding-block:12px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo svg{width:38px;height:38px}
+.logo b{font-family:var(--display);font-size:22px;color:var(--coffee)}
+.logo small{display:block;font-size:11px;color:var(--muted);line-height:1}
+.grow{flex:1}
+.pill{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px;font-size:13px}
+.cart{display:flex;align-items:center;gap:6px;background:var(--coffee);color:var(--sand);border:0;border-radius:999px;padding:7px 14px;font-weight:600}
+.cart span{background:var(--saffron);color:#fff;border-radius:999px;min-width:22px;text-align:center;font-size:12px;padding-inline:6px}
+
+.hero{background:
+  radial-gradient(circle at 18% 30%,#f2c27a 0 46px,transparent 47px),
+  linear-gradient(180deg,#3b1c12 0%,#8a3b1c 55%,#d08a3e 100%);color:#fff6ea;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto 0 0 0;height:70px;background:
+  radial-gradient(120% 90px at 30% 100%,#5a2e1a 60%,transparent 61%),
+  radial-gradient(90% 70px at 85% 100%,#3b1c12 60%,transparent 61%)}
+.hero .wrap{position:relative;z-index:1;padding-block:56px 96px;display:grid;gap:14px;max-width:1120px}
+.hero h1{font-size:clamp(30px,6vw,52px);max-width:16ch}
+.hero p{max-width:46ch;margin:0;opacity:.92}
+.hero .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.btn{border:0;border-radius:10px;padding:11px 20px;font-weight:600}
+.btn.main{background:var(--saffron);color:#fff}
+.btn.ghost{background:transparent;color:#fff6ea;border:1px solid #fff6ea88}
+
+section{padding-block:40px}
+.head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.head h2{font-size:26px;color:var(--coffee)}
+.eyebrow{font-size:12px;color:var(--saffron);font-weight:600;letter-spacing:.02em}
+
+.cats{display:flex;gap:8px;flex-wrap:wrap}
+.cat{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 16px;font-size:14px}
+.cat[aria-pressed="true"]{background:var(--coffee);border-color:var(--coffee);color:var(--sand)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.prod{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.img{aspect-ratio:4/3;max-width:100%;display:grid;place-items:center;background:
+  linear-gradient(160deg,#ecd9bd,#d9b98d);position:relative}
+.img svg{width:52%;height:auto}
+.tag{position:absolute;top:10px;inset-inline-start:10px;background:var(--sadu1);color:#fff;font-size:12px;border-radius:6px;padding:1px 8px}
+.pbody{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.pbody h3{font-family:var(--body);font-size:16px;font-weight:600}
+.pbody p{margin:0;color:var(--muted);font-size:13px}
+.prow{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:8px;gap:8px}
+.price{font-weight:600;color:var(--coffee);font-variant-numeric:tabular-nums}
+.price s{color:var(--muted);font-weight:400;font-size:12px;margin-inline-start:6px}
+.add{background:transparent;border:1px solid var(--coffee);color:var(--coffee);border-radius:8px;padding:5px 12px;font-size:13px;font-weight:600}
+.add.done{background:var(--ok);border-color:var(--ok);color:#fff}
+
+.trust{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.t{display:flex;gap:12px;align-items:flex-start;padding:16px;border-top:3px solid var(--saffron);background:var(--card)}
+.t svg{flex:none;width:30px;height:30px;color:var(--saffron)}
+.t h3{font-size:17px;color:var(--coffee)}
+.t p{margin:0;font-size:13px;color:var(--muted)}
+
+footer{background:var(--sadu2);color:#e9d8bd;margin-top:20px}
+footer .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;padding-block:32px}
+footer h3{font-size:16px;color:#f2c27a;margin-bottom:8px}
+footer p,footer li{font-size:13px;margin:0;opacity:.85}
+footer ul{list-style:none;padding:0;margin:0;display:grid;gap:4px}
+.copy{border-top:1px solid #ffffff22;text-align:center;font-size:12px;padding-block:12px;opacity:.7}
+.wa{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));inset-inline-start:16px;background:#25a35a;color:#fff;border-radius:999px;padding:10px 16px;font-weight:600;font-size:14px;text-decoration:none;box-shadow:0 4px 14px #0003;z-index:20}
+.herogrid{grid-template-columns:1fr;align-items:center}
+.herotext{display:grid;gap:14px;min-width:0}
+.heroimg{width:100%;max-width:340px;justify-self:center;border-radius:12px;background:#fff;box-shadow:0 10px 30px #0005;transform:rotate(-3deg)}
+@media (min-width:760px){.herogrid{grid-template-columns:1.2fr 1fr}}
+.img{background:#fff!important}
+.img img{width:100%;height:100%;object-fit:contain}
+.size{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.note{font-size:12px;color:var(--muted);text-align:center;margin-top:14px}
+@media (prefers-reduced-motion:no-preference){.prod{transition:transform .2s}.prod:hover{transform:translateY(-3px)}}
+</style>
+</head>
+<body>
+
+
+<div class="notice" data-i18n="notice">شحن لجميع مناطق المملكة · دفع عند الاستلام متاح</div>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#top" aria-label="الرئيسية">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M3 32 L20 8 L37 32 Z" fill="var(--coffee)"/><path d="M15 32 L20 22 L25 32 Z" fill="var(--saffron)"/><rect x="2" y="32" width="36" height="3" fill="var(--sadu1)"/></svg>
+      <span><b data-i18n="brand">دار الكشتة</b><small data-i18n="tagline">مراكي وزوالي وتعليقات تراثية</small></span>
+    </a>
+    <span class="grow"></span>
+    <button class="pill" id="lang" type="button">English</button>
+    <button class="cart" id="cartBtn" type="button"><span id="count">0</span><b data-i18n="cart">السلة</b></button>
+  </div>
+</header>
+
+<div class="hero" id="top">
+  <div class="wrap herogrid"><div class="herotext">
+    <span class="eyebrow" style="color:#f2c27a" data-i18n="heroEye">منسوجات يدوية</span>
+    <h1 data-i18n="heroT">مجلسك بطابع البادية</h1>
+    <p data-i18n="heroP">مراكي، زوالي، وتعليقات جدارية منسوجة بنقشات السدو والصحراء. تزيّن مجلسك وتوصلك لباب البيت.</p>
+    <div class="cta">
+      <button class="btn main" type="button" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})" data-i18n="shopNow">تسوّق الآن</button>
+      <button class="btn ghost" type="button" onclick="pick('mirka');document.getElementById('shop').scrollIntoView({behavior:'smooth'})" data-i18n="seeTents">شوف المراكي</button>
+    </div>
+  </div>
+  <img class="heroimg" src="img/hang-red-camel.webp" alt="تعليقة جدارية منسوجة: جمل ونخلة وقت الغروب" width="900" height="900"></div>
+</div>
+<div class="sadu" aria-hidden="true"></div>
+
+<main class="wrap">
+  <section id="shop">
+    <div class="head">
+      <div><span class="eyebrow" data-i18n="catsEye">أقسامنا</span><h2 data-i18n="catsT">المنتجات</h2></div>
+      <div class="cats" id="cats"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p class="note" data-i18n="sample">الأسعار والمقاسات الحالية مؤقتة، أرسلها لنا ونحدّثها.</p>
+  </section>
+
+  <section>
+    <div class="head"><div><span class="eyebrow" data-i18n="whyEye">مميزاتنا</span><h2 data-i18n="whyT">ليش تختارنا</h2></div></div>
+    <div class="trust">
+      <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><div><h3 data-i18n="w1">طرق دفع متعددة</h3><p data-i18n="w1p">مدى، أبل باي، تابي، والدفع عند الاستلام.</p></div></div>
+      <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg><div><h3 data-i18n="w2">شغل يدوي بخامات أصلية</h3><p data-i18n="w2p">صوف وقطن منسوج يدوياً بألوان ثابتة ونقشات تراثية.</p></div></div>
+      <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6h13v10H1zM14 10h5l4 4v2h-9z"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg><div><h3 data-i18n="w3">شحن سريع</h3><p data-i18n="w3p">من ٢ إلى ٥ أيام عمل لجميع المدن.</p></div></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><h3 data-i18n="brand">دار الكشتة</h3><p data-i18n="about">متجر متخصص في المراكي والزوالي والتعليقات التراثية، نوصل طلبك لين باب البيت.</p></div>
+    <div><h3 data-i18n="links">روابط مهمة</h3><ul><li data-i18n="l1">سياسة الاستبدال والاسترجاع</li><li data-i18n="l2">سياسة الخصوصية</li><li data-i18n="l3">الشحن والتوصيل</li></ul></div>
+    <div><h3 data-i18n="contact">تواصل معنا</h3><ul><li><span data-i18n="wa">واتساب</span>: <span dir="ltr">+966 5X XXX XXXX</span></li><li dir="ltr" style="text-align:start">info@yourstore.sa</li></ul></div>
+  </div>
+  <div class="copy" data-i18n="rights">جميع الحقوق محفوظة © 2026 دار الكشتة</div>
+</footer>
+<a class="wa" href="#top" data-i18n="waBtn">تواصل واتساب</a>
+
+<script>
+const CATS=[['all','الكل','All'],['mirka','مراكي','Armrests & cushions'],['rug','زوالي','Rugs'],['hang','تعليقات','Wall hangings']];
+const P=[
+ {c:'mirka',img:'mirka-shdad',ar:'مركى شداد سدو',en:'Sadu shdad armrest',dar:'مركى على شكل شداد الجمل، بأعمدة خشب ومسامير نحاسية.',den:'Camel-saddle armrest with wooden posts and brass studs.',p:450,tag:['الأكثر طلباً','Best seller']},
+ {c:'mirka',img:'mirka-red',ar:'مركى سدو أحمر بشراشيب',en:'Red sadu armrest with tassels',dar:'منسوج يدوي بخطوط سدو وشراشيب ملونة.',den:'Handwoven sadu stripes with colored tassels.',p:290},
+ {c:'mirka',img:'cushion-kilim',ar:'مخدة كليم منسوجة',en:'Woven kilim cushion',dar:'مخدة مستطيلة بنقشة نجمة البادية.',den:'Rectangular cushion with a Bedouin star motif.',p:120,o:150,tag:['خصم','Sale']},
+ {c:'rug',img:'rug-sadu',ar:'زولية سدو ممر',en:'Sadu runner rug',dar:'زولية طويلة بنقشة السدو وأطراف شراشيب سوداء.',den:'Long sadu-pattern runner with black fringe.',p:380,tag:['جديد','New']},
+ {c:'rug',img:'rug-shag',ar:'زولية صوف منفوشة',en:'Shaggy wool rug',dar:'صوف كثيف بألوان الأحمر والبرتقالي والأبيض.',den:'Dense wool in red, orange and white.',p:520},
+ {c:'hang',img:'hang-red-camel',ar:'تعليقة الجمل وقت الغروب',en:'Camel at sunset hanging',dar:'تعليقة جدارية منسوجة يدوياً، بيت شعر وجمل ونخلة.',den:'Handwoven wall hanging: tent, camel and palm.',p:160},
+ {c:'hang',img:'hang-blue-camel',ar:'تعليقة الجمال والنخلة',en:'Camels & palm hanging',dar:'سماء زرقاء وقمر ونخلة، شغل يدوي.',den:'Blue sky, moon and palm, handwoven.',p:160},
+ {c:'hang',img:'hang-tree',ar:'تعليقة الشجرة والطيور',en:'Tree & birds hanging',dar:'شجرة وطيور على خلفية ذهبية.',den:'Tree and birds on a golden ground.',p:150}
+];
+let lang='ar',cat='all',count=0;
+const T={notice:'Shipping across Saudi Arabia · Cash on delivery available',brand:'Dar Al Kashta',tagline:'Heritage armrests, rugs & hangings',cart:'Cart',heroEye:'Handwoven pieces',heroT:'Bring the desert into your majlis',heroP:'Armrests, rugs and wall hangings woven with sadu and desert motifs, delivered to your door.',shopNow:'Shop now',seeTents:'See armrests',catsEye:'Categories',catsT:'Products',sample:'Prices and sizes are placeholders for now; send yours and we will update them.',whyEye:'Why us',whyT:'Why choose us',w1:'Many ways to pay',w1p:'Mada, Apple Pay, Tabby and cash on delivery.',w2:'Handmade, real materials',w2p:'Hand-woven wool and cotton in lasting colors and heritage patterns.',w3:'Fast shipping',w3p:'2 to 5 business days to every city.',about:'Specialists in heritage armrests, rugs and wall hangings, delivered to your door.',links:'Useful links',l1:'Returns & exchange policy',l2:'Privacy policy',l3:'Shipping & delivery',contact:'Contact us',wa:'WhatsApp',rights:'All rights reserved © 2026 Dar Al Kashta',waBtn:'WhatsApp us'};
+const AR={};document.querySelectorAll('[data-i18n]').forEach(e=>{AR[e.dataset.i18n]??=e.textContent});
+const sar=n=>lang==='ar'?n.toLocaleString('ar-SA')+' ر.س':'SAR '+n.toLocaleString('en');
+function renderCats(){document.getElementById('cats').innerHTML=CATS.map(([k,a,e])=>`<button class="cat" type="button" aria-pressed="${k===cat}" onclick="pick('${k}')">${lang==='ar'?a:e}</button>`).join('')}
+function render(){
+ document.getElementById('grid').innerHTML=P.filter(x=>cat==='all'||x.c===cat).map((x,i)=>`
+ <article class="prod"><div class="img">${x.tag?`<span class="tag">${x.tag[lang==='ar'?0:1]}</span>`:''}<img src="img/${x.img}.webp" alt="${x.ar}" loading="lazy"></div>
+ <div class="pbody"><h3>${lang==='ar'?x.ar:x.en}</h3><p>${lang==='ar'?x.dar:x.den}</p>
+ <div class="prow"><span class="price">${sar(x.p)}${x.o?`<s>${sar(x.o)}</s>`:''}</span>
+ <button class="add" type="button" onclick="add(this)">${lang==='ar'?'أضف للسلة':'Add to cart'}</button></div></div></article>`).join('');
+}
+function pick(k){cat=k;renderCats();render()}
+function add(b){count++;document.getElementById('count').textContent=lang==='ar'?count.toLocaleString('ar-SA'):count;b.classList.add('done');b.textContent=lang==='ar'?'تمت الإضافة':'Added';setTimeout(()=>{b.classList.remove('done');b.textContent=lang==='ar'?'أضف للسلة':'Add to cart'},1400)}
+document.getElementById('lang').onclick=()=>{
+ lang=lang==='ar'?'en':'ar';
+ document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+ document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=(lang==='ar'?AR:T)[e.dataset.i18n]);
+ document.getElementById('lang').textContent=lang==='ar'?'English':'العربية';
+ document.getElementById('count').textContent=lang==='ar'?count.toLocaleString('ar-SA'):count;
+ renderCats();render();
+};
+document.documentElement.lang='ar';document.documentElement.dir='rtl';
+document.getElementById('count').textContent='٠';
+renderCats();render();
+</script>
+
+</body>
+</html>
